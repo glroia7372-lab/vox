@@ -1,6 +1,6 @@
 export const styleQuiz = [
     {
-        question: "당신의 감각을 자극하는 미학적 취향은?",
+        question: "당신이 추구하는 시각적 무드는?",
         options: [
             { text: "Minimalist Architect", style: "Minimal / Clean / Form", image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=800&q=80" },
             { text: "Neo-Romanticist", style: "Fluid / Poetic / Texture", image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80" },
@@ -9,21 +9,21 @@ export const styleQuiz = [
         ]
     },
     {
-        question: "당신의 스타일이 가장 찬란하게 빛나야 할 무대는?",
+        question: "당신의 스타일이 가장 빛나야 할 순간은?",
         options: [
-            { text: "Daily High-End", detail: "당신의 일상에 고결한 격을 더하는 크리에이티브 시나리오" },
-            { text: "Night Out / Artistic", detail: "예술적 영감이 가득한 갤러리 오프닝과 프라이빗한 이브닝" },
-            { text: "Global Voyager", detail: "기능적 완벽함과 스타일을 동시에 구현하는 글로벌 라이프스타일" },
-            { text: "Quiet Luxury", detail: "웅변하지 않아도 고요하게 드러나는 우아함의 정수" }
+            { text: "Daily High-End", detail: "일상의 격을 높이는 오피스 & 유니크 시나리오" },
+            { text: "Night Out / Artistic", detail: "영감을 주는 갤러리와 특별한 프라이빗 파티" },
+            { text: "Global Voyager", detail: "활동성과 스타일을 동시에 갖춘 글로벌 라이프스타일" },
+            { text: "Quiet Luxury", detail: "드러내지 않아도 느껴지는 고유한 우아함" }
         ]
     },
     {
-        question: "스타일링에서 결코 타협할 수 없는 본질적인 가치는?",
+        question: "스타일링에서 가장 중요하게 생각하는 가치는?",
         options: [
-            { text: "The Silhouette", detail: "착용자의 몸을 완벽하게 이해하고 구조화하는 피팅의 미학" },
-            { text: "The Material", detail: "감각을 깨우는 텍스처와 최상의 소재가 전달하는 본연의 퀄리티" },
-            { text: "The Story", detail: "하우스의 유구한 역사와 디자이너가 투영한 독창적 세계관" },
-            { text: "The Innovation", detail: "시대를 앞서가는 테크놀로지와 패션이 결합된 진보적인 미래" }
+            { text: "The Silhouette", detail: "몸의 곡선을 완벽하게 조형하는 피팅의 미학" },
+            { text: "The Material", detail: "감각적인 텍스처와 최상급 소재의 퀄리티" },
+            { text: "The Story", detail: "브랜드의 역사와 디자이너의 독창적인 철학" },
+            { text: "The Innovation", detail: "신소재와 기술이 결합된 진보적인 패션" }
         ]
     }
 ];
@@ -73,7 +73,7 @@ export const exclusiveContent = [
         tags: ['Street', 'High-end']
     },
     {
-        title: "럭셔리 하우스의 지속가능성 인텔리전스",
+        title: "럭셔리 브랜드의 지속가능성 전략",
         type: "Industry Report",
         pages: 24,
         thumbnail: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=600&h=400&fit=crop",
@@ -94,13 +94,13 @@ export const todayLookbook = [
     {
         weather: "Clear 18°C",
         occasion: "Daily Routine",
-        items: ["라이트 트렌치코트", "화이트 실크 셔츠", "슬림 피트 데님"],
+        items: ["라이트 트렌치코트", "화이트 셔츠", "슬림 피트 데님"],
         image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=500&fit=crop"
     },
     {
         weather: "Clear 18°C",
         occasion: "Artistic Weekend",
-        items: ["파인 게이지 니트 가디건", "플리츠 스커트", "레더 로퍼"],
+        items: ["니트 가디건", "플리츠 스커트", "레더 로퍼"],
         image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=500&fit=crop"
     }
 ];
@@ -109,8 +109,8 @@ export const categoryContents = {
     fashion: [
         {
             id: 1,
-            title: "2026 S/S 트렌드 리포트: 본질주의의 귀환",
-            description: "수사학을 걷어내고 피스와 소재 본연의 가치에 집중하는 새로운 시대가 열립니다.",
+            title: "2026 S/S 트렌드 리포트: 미니멀리즘의 귀환",
+            description: "화려함을 덜어내고 본질에 집중하는 새로운 시대가 열립니다.",
             image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=600&fit=crop",
             date: "2026.01.15",
             author: "VOX Editorial"
@@ -118,7 +118,7 @@ export const categoryContents = {
         {
             id: 2,
             title: "지금 주목해야 할 라이징 디자이너 5인",
-            description: "파리와 런던을 기반으로 새로운 패션 담론을 형성하고 있는 주역들을 조명합니다.",
+            description: "파리와 런던을 기반으로 새로운 트렌드를 만드는 주역들을 소개합니다.",
             image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&h=600&fit=crop",
             date: "2026.01.14",
             author: "Sarah Kim"
@@ -126,7 +126,7 @@ export const categoryContents = {
         {
             id: 3,
             title: "아카이브 데님의 미학",
-            description: "시간의 흔적마저 스타일이 되는 빈티지 데님 큐레이션 및 스타일링 가이드.",
+            description: "시간이 지날수록 가치를 더하는 빈티지 데님 스타일링 가이드.",
             image: "https://images.unsplash.com/photo-1558769132-cb1aea9f3dbc?w=800&h=600&fit=crop",
             date: "2026.01.13",
             author: "VOX Style Archive"
@@ -136,15 +136,15 @@ export const categoryContents = {
         {
             id: 1,
             title: "글래스 스킨 스컬프팅: 수분 그 이상의 광택",
-            description: "피부 근원부터 차오르는 투명함을 구현하기 위한 고감도 스킨케어 알고리즘.",
+            description: "투명하고 맑은 피부를 위한 전문가의 스킨케어 루틴.",
             image: "https://images.unsplash.com/photo-1522335789203-abd6523f4364?w=800&h=600&fit=crop",
             date: "2026.01.15",
             author: "Jenna Lee"
         },
         {
             id: 2,
-            title: "2026 뷰티 무드: 드라마틱 볼드 립",
-            description: "미니멀한 메이크업에 강렬한 페르소나를 부여하는 딥 베리 컬러의 귀환.",
+            title: "2026 뷰티 트렌드: 드라마틱 볼드 립",
+            description: "미니멀한 메이크업에 강렬한 포인트를 주는 립 컬러 제안.",
             image: "https://images.unsplash.com/photo-1487412947132-26f2449ddca9?w=800&h=600&fit=crop",
             date: "2026.01.12",
             author: "VOX Beauty Lab"
@@ -153,16 +153,16 @@ export const categoryContents = {
     culture: [
         {
             id: 1,
-            title: "패션, 예술의 경계를 찬란하게 허물다",
-            description: "컨템포러리 아트와 럭셔리 하우스의 협업을 통해 본 동시대 시각 문화의 단면.",
+            title: "패션과 예술의 조우",
+            description: "런웨이와 갤러리를 넘나드는 동시대 예술 문화의 현장.",
             image: "https://images.unsplash.com/photo-1518998053901-5348d39691c2?w=800&h=600&fit=crop",
             date: "2026.01.10",
             author: "Park Ji-sung"
         },
         {
             id: 2,
-            title: "서울의 취향: 고요한 라이프스타일 큐레이션",
-            description: "심미적 안목을 가진 큐레이터들이 제안하는 서울의 가장 프라이빗한 공간들.",
+            title: "서울의 취향: 고요한 라이프스타일 편집샵",
+            description: "심미적 안목을 가진 큐레이터들이 소개하는 서울의 공간들.",
             image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&h=600&fit=crop",
             date: "2026.01.08",
             author: "VOX Culture Team"
@@ -172,7 +172,7 @@ export const categoryContents = {
         {
             id: 1,
             title: "PRADA 2026 F/W: 새로운 장의 서막",
-            description: "미우치아 프라다와 라프 시몬스가 재해석한 지적 우아함에 대한 정의.",
+            description: "미우치아 프라다와 라프 시몬스가 재해석한 지적 우아함.",
             image: "https://images.unsplash.com/photo-1509631179647-b849389274e9?w=800&h=600&fit=crop",
             date: "2026.01.16",
             author: "Runway Correspondent"
@@ -180,7 +180,7 @@ export const categoryContents = {
         {
             id: 2,
             title: "서울 패션위크 하이라이트",
-            description: "DDP의 구조적 조명 아래 펼쳐진 서울 신진 디자이너들의 독창적인 실험 정신.",
+            description: "DDP를 뜨겁게 달군 국내 디자이너들의 독창적인 실험 정신.",
             image: "https://images.unsplash.com/photo-1596461404942-363c59637966?w=800&h=600&fit=crop",
             date: "2026.01.05",
             author: "K-Fashion Reporter"
@@ -189,8 +189,8 @@ export const categoryContents = {
     video: [
         {
             id: 1,
-            title: "Inside the Atelier: CHANEL 샤넬의 심장을 만나다",
-            description: "전설적인 공방에서 탄생하는 하이 패션의 수작업 공정 독점 공개.",
+            title: "Inside the Atelier: CHANEL",
+            description: "전설적인 공방에서 탄생하는 하이 패션의 제작 공정 독점 공개.",
             image: "https://images.unsplash.com/photo-1574717436401-063d8356cc79?w=800&h=600&fit=crop",
             date: "2026.01.01",
             author: "VOX Digital"

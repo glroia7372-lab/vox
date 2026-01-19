@@ -8,8 +8,8 @@ export default function Footer() {
 
     return (
         <footer className={`border-t ${showDarkMode ? 'bg-black border-gray-800' : 'bg-gray-50 border-gray-200'} transition-colors`}>
-            <div className="max-w-7xl mx-auto px-6 py-12">
-                <div className="grid md:grid-cols-4 gap-8 mb-12">
+            <div className="max-w-7xl mx-auto px-6 py-16 md:py-20 lg:py-24">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 mb-16">
                     {/* 브랜드 */}
                     <Link href="/about" className="group block">
                         <div className="text-xl mb-4 tracking-wider font-serif group-hover:text-vox-red transition-colors">VOX</div>

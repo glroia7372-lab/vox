@@ -19,22 +19,22 @@ export default function HomePage() {
                 <div className="text-xs tracking-widest text-vox-red">
                   DATA-DRIVEN FASHION CURATION
                 </div>
-                <h1 className="text-6xl leading-tight font-serif">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1] font-serif tracking-tight">
                   Find Your Voice,<br />Define Your Style.
                 </h1>
-                <p className="text-xl text-gray-600 leading-relaxed">
-                  오직 당신만을 위해 정제된 에디토리얼, VOX.<br />3분의 진단을 통해 당신의 스타일 본질을 발견하세요.
+                <p className="text-lg sm:text-xl text-gray-600 leading-relaxed max-w-lg">
+                  나보다 나를 더 잘 아는 패션 큐레이션, VOX.<br />3분 진단으로 당신만의 스타일 DNA를 확인하세요.
                 </p>
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-4 pt-4">
                   <button
                     onClick={() => setShowStyleQuiz(true)}
-                    className="px-8 py-4 text-white bg-vox-red hover:opacity-90 transition-opacity rounded-lg"
+                    className="px-8 py-4 text-white bg-vox-red hover:opacity-90 transition-opacity rounded-lg text-sm font-bold tracking-widest uppercase"
                   >
                     스타일 DNA 진단 시작
                   </button>
                   <Link
                     href="/archive"
-                    className="px-8 py-4 border border-gray-300 hover:border-gray-900 transition-colors rounded-lg inline-flex items-center justify-center"
+                    className="px-8 py-4 border border-gray-300 hover:border-gray-900 transition-colors rounded-lg inline-flex items-center justify-center text-sm font-bold tracking-widest uppercase"
                   >
                     아카이브 탐색
                   </Link>
@@ -57,9 +57,9 @@ export default function HomePage() {
         {/* Why VOX Section */}
         <section className={`py-20 ${showDarkMode ? 'bg-black' : 'bg-gray-50'}`}>
           <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl mb-4 font-serif">Why VOX?</h2>
-              <p className="text-xl text-gray-600">데이터가 선별하고 감각이 정제한 패션 미학의 새로운 기준</p>
+            <div className="text-center mb-16 px-4">
+              <h2 className="text-3xl sm:text-4xl mb-4 font-serif">Why VOX?</h2>
+              <p className="text-lg sm:text-xl text-gray-600">데이터로 분석하고 감각으로 제안하는 새로운 패션 기준</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-12">
@@ -69,7 +69,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-2xl mb-4 font-serif">3분 브리핑</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  방대한 글로벌 패션 인텔리전스를 매주 월요일, 단 3분의 통찰로 응축하여 전달합니다.
+                  매주 월요일 아침, 글로벌 패션 트렌드를 3분 요약으로 쉽고 빠르게 전달합니다.
                 </p>
               </div>
 
@@ -77,9 +77,9 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center bg-vox-red">
                   <Sparkles className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-2xl mb-4 font-serif">하이퍼 개인화</h3>
+                <h3 className="text-2xl mb-4 font-serif">개인화 큐레이션</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  스타일 DNA 분석 시스템이 수만 개의 소스 중 당신의 취향에 부합하는 정수만을 가려냅니다.
+                  스타일 DNA 분석을 통해 수많은 정보 중 당신의 취향에 꼭 맞는 소식만 선별합니다.
                 </p>
               </div>
 
@@ -87,9 +87,9 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center bg-vox-red">
                   <TrendingUp className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-2xl mb-4 font-serif">실시간 트렌드 엔진</h3>
+                <h3 className="text-2xl mb-4 font-serif">실시간 트렌드</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  전 세계 패션 수도의 트렌드를 초 단위로 수집하여, 변화무쌍한 패션계의 흐름을 실시간으로 분석합니다.
+                  전 세계 패션 수도의 흐름을 실시간으로 분석하여 가장 빠르고 정확하게 공유합니다.
                 </p>
               </div>
             </div>
@@ -99,12 +99,12 @@ export default function HomePage() {
         {/* Newsletter Preview */}
         <section className="py-20 px-6">
           <div className="max-w-3xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl mb-4 font-serif">
-                매주 월요일 오전 8시, 당신의 받은편지함으로
+            <div className="text-center mb-12 px-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl mb-6 font-serif leading-tight">
+                매주 월요일 오전 8시,<br className="hidden sm:block" />당신의 받은편지함으로
               </h2>
-              <p className="text-xl text-gray-600">
-                나만을 위한 패션 브리핑을 받아보세요
+              <p className="text-lg sm:text-xl text-gray-600">
+                나만을 위한 패션 브리핑을 매주 받아보세요
               </p>
             </div>
 

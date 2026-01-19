@@ -71,7 +71,7 @@ export default function StyleQuiz() {
 
                 {/* Question */}
                 <div className="flex-1 overflow-y-auto mb-8 px-2 custom-scrollbar relative z-10">
-                    <h3 className={`text-3xl md:text-6xl font-serif mb-12 leading-[1.1] tracking-tighter ${showDarkMode ? 'text-white' : 'text-black'}`}>
+                    <h3 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif mb-8 md:mb-12 leading-[1.1] tracking-tighter ${showDarkMode ? 'text-white' : 'text-black'}`}>
                         {styleQuiz[quizStep].question}
                     </h3>
 

@@ -60,13 +60,13 @@ export default function Navigation() {
             <div className="max-w-[1920px] mx-auto px-6 lg:px-12 h-20 md:h-24 flex items-center justify-between">
                 {/* Left: Logo */}
                 <Link href="/" className="z-50 shrink-0">
-                    <span className={`text-3xl md:text-5xl font-serif tracking-tighter hover:opacity-70 transition-opacity ${showDarkMode ? 'text-white' : 'text-black'}`}>
+                    <span className={`text-3xl md:text-5xl font-serif tracking-vogue hover:opacity-70 transition-opacity ${showDarkMode ? 'text-white' : 'text-black'}`}>
                         VOX
                     </span>
                 </Link>
 
                 {/* Center: Categories (Desktop Only) */}
-                <div className="hidden lg:flex items-center gap-8 xl:gap-12 text-[11px] font-bold tracking-[0.15em]">
+                <div className="hidden lg:flex items-center gap-8 xl:gap-12 text-[11px] font-bold tracking-vogue-tight">
                     {['FASHION', 'BEAUTY', 'CULTURE', 'RUNWAY', 'VIDEO'].map((item) => (
                         <Link
                             key={item}
@@ -142,26 +142,55 @@ export default function Navigation() {
                         </div>
 
                         {/* Menu Links */}
-                        <div className="flex flex-col gap-6 text-2xl font-serif italic mb-12">
-                            <Link href="/" onClick={() => setMenuOpen(false)} className="hover:translate-x-2 transition-transform">Home</Link>
-                            <Link href="/archive" onClick={() => setMenuOpen(false)} className="hover:translate-x-2 transition-transform">Archive</Link>
-                            {['Fashion', 'Beauty', 'Culture', 'Runway', 'Video'].map((item) => (
-                                <Link key={item} href={`/${item.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="hover:translate-x-2 transition-transform">
-                                    {item}
-                                </Link>
-                            ))}
-                            <Link href="/cart" onClick={() => setMenuOpen(false)} className="hover:translate-x-2 transition-transform italic text-vox-red/80 uppercase tracking-widest text-lg">My Bag ({cartItems.length})</Link>
+                        <div className="flex flex-col gap-8 mb-12">
+                            <div className="space-y-4">
+                                <p className="text-[10px] font-black tracking-[0.3em] text-gray-400 uppercase">Collections</p>
+                                <div className="flex flex-col gap-4 text-3xl sm:text-4xl lg:text-5xl font-serif italic">
+                                    <Link href="/" onClick={() => setMenuOpen(false)} className="group flex items-baseline gap-4 hover:translate-x-2 transition-transform">
+                                        <span>Home</span>
+                                        <span className="text-xs font-sans not-italic font-bold text-gray-300 group-hover:text-vox-red uppercase tracking-widest">홈</span>
+                                    </Link>
+                                    <Link href="/archive" onClick={() => setMenuOpen(false)} className="group flex items-baseline gap-4 hover:translate-x-2 transition-transform">
+                                        <span>Trend Archive</span>
+                                        <span className="text-xs font-sans not-italic font-bold text-gray-300 group-hover:text-vox-red uppercase tracking-widest">아카이브</span>
+                                    </Link>
+                                    {['Fashion', 'Beauty', 'Culture', 'Runway', 'Video'].map((item) => (
+                                        <Link key={item} href={`/${item.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="group flex items-baseline gap-4 hover:translate-x-2 transition-transform">
+                                            <span>{item}</span>
+                                            <span className="text-xs font-sans not-italic font-bold text-gray-300 group-hover:text-vox-red uppercase tracking-widest">
+                                                {item === 'Fashion' ? '패션' : item === 'Beauty' ? '뷰티' : item === 'Culture' ? '컬처' : item === 'Runway' ? '런웨이' : '비디오'}
+                                            </span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
 
-                            <div className={`h-px ${showDarkMode ? 'bg-gray-800' : 'bg-gray-200'} my-2`} />
+                            <div className="space-y-4 pt-8 border-t border-gray-100 dark:border-gray-900 font-serif">
+                                <p className="text-[10px] font-black tracking-[0.3em] text-gray-400 uppercase">Personal</p>
+                                <div className="flex flex-col gap-4 text-xl sm:text-2xl italic">
+                                    <Link href="/cart" onClick={() => setMenuOpen(false)} className="group flex items-center justify-between hover:translate-x-2 transition-transform">
+                                        <span>My Bag</span>
+                                        <span className="text-sm font-sans not-italic font-bold bg-vox-red text-white px-2 py-0.5 rounded-full">{cartItems.length}</span>
+                                    </Link>
 
-                            {isSubscriber ? (
-                                <>
-                                    <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="text-vox-red hover:translate-x-2 transition-transform">My Dashboard</Link>
-                                    <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="text-left hover:translate-x-2 transition-transform text-gray-500 text-lg font-serif">Logout</button>
-                                </>
-                            ) : (
-                                <Link href="/login" onClick={() => setMenuOpen(false)} className="hover:translate-x-2 transition-transform">Login / Join</Link>
-                            )}
+                                    {isSubscriber ? (
+                                        <>
+                                            <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="text-vox-red hover:translate-x-2 transition-transform">My Dashboard</Link>
+                                            <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="text-left hover:translate-x-2 transition-transform text-gray-500 font-serif">Logout</button>
+                                        </>
+                                    ) : (
+                                        <div className="flex flex-col gap-4">
+                                            <Link href="/login" onClick={() => setMenuOpen(false)} className="hover:translate-x-2 transition-transform">Login / Join</Link>
+                                            <button
+                                                onClick={() => { setShowStyleQuiz(true); setMenuOpen(false); }}
+                                                className="text-left text-vox-red hover:translate-x-2 transition-transform"
+                                            >
+                                                Start Style DNA
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
 
                         {/* Bottom Actions */}

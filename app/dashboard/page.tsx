@@ -211,7 +211,7 @@ export default function DashboardPage() {
                                 </button>
                             </div>
                         </div>
-                        <h1 className="text-4xl md:text-6xl font-serif font-black tracking-tighter mb-4 uppercase">
+                        <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-black tracking-tighter mb-4 uppercase">
                             {userProfile?.name || userProfile?.style || 'VOX CURATOR'}
                         </h1>
 
@@ -241,20 +241,20 @@ export default function DashboardPage() {
                             )}
                             <button
                                 onClick={() => setIsEditProfileOpen(true)}
-                                className="mt-4 px-8 py-2 border border-gray-200 dark:border-gray-800 rounded-full text-[10px] font-black tracking-widest uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
+                                className="mt-4 px-8 py-2.5 border border-gray-200 dark:border-gray-800 rounded-full text-[10px] font-black tracking-widest uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
                             >
                                 Edit Profile
                             </button>
                         </div>
 
-                        <div className="flex items-center justify-center gap-10 text-[10px] text-gray-400 font-black tracking-[0.3em] uppercase">
+                        <div className="flex items-center justify-center gap-6 sm:gap-10 text-[10px] text-gray-400 font-black tracking-[0.2em] sm:tracking-[0.3em] uppercase">
                             <span className="flex flex-col gap-1 items-center">
-                                <span className="text-3xl text-black dark:text-white font-serif">{bookmarks.length}</span>
+                                <span className="text-2xl sm:text-3xl text-black dark:text-white font-serif">{bookmarks.length}</span>
                                 PINS
                             </span>
                             <div className="w-px h-10 bg-gray-200 dark:bg-gray-800"></div>
                             <span className="flex flex-col gap-1 items-center">
-                                <span className="text-3xl text-black dark:text-white font-serif">{boards.length + 1}</span>
+                                <span className="text-2xl sm:text-3xl text-black dark:text-white font-serif">{boards.length + 1}</span>
                                 BOARDS
                             </span>
                         </div>
@@ -263,16 +263,16 @@ export default function DashboardPage() {
 
                 <div className="max-w-[1600px] mx-auto px-6">
                     <div className="flex flex-col lg:flex-row items-center justify-between gap-8 mb-16 pt-10 border-t border-gray-100 dark:border-gray-900">
-                        <div className="flex gap-14">
+                        <div className="flex gap-8 sm:gap-14 overflow-x-auto no-scrollbar scroll-smooth pb-2">
                             {['boards', 'pins', 'trash'].map((tab) => (
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab as any)}
-                                    className={`text-xs font-black tracking-[0.4em] uppercase pb-4 transition-all relative ${activeTab === tab ? 'text-vox-red' : 'text-gray-300 hover:text-black dark:hover:text-white'}`}
+                                    className={`text-[10px] sm:text-xs font-black tracking-[0.3em] sm:tracking-[0.4em] uppercase pb-4 transition-all relative whitespace-nowrap ${activeTab === tab ? 'text-vox-red' : 'text-gray-300 hover:text-black dark:hover:text-white'}`}
                                 >
                                     {tab}
                                     {tab === 'trash' && deletedItems.length > 0 && (
-                                        <span className="absolute -top-1 -right-4 w-4 h-4 bg-vox-red text-white text-[8px] flex items-center justify-center rounded-full">
+                                        <span className="absolute -top-1 -right-4 w-4 h-4 bg-vox-red text-white text-[8px] flex items-center justify-center rounded-full text-center">
                                             {deletedItems.length}
                                         </span>
                                     )}
@@ -318,7 +318,7 @@ export default function DashboardPage() {
                                     <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
                                 </button>
 
-                                <h2 className="text-6xl md:text-8xl font-serif font-black tracking-tighter uppercase mb-6 leading-none">
+                                <h2 className="text-4xl sm:text-6xl md:text-8xl font-serif font-black tracking-tighter uppercase mb-6 leading-none">
                                     {selectedBoardId === 'all-saved' ? 'Everything I Archive' : activeBoard?.name}
                                 </h2>
                                 <div className="flex items-center justify-center gap-4 text-xs font-black tracking-[0.2em] text-gray-400 uppercase">
