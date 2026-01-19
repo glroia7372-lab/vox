@@ -1,29 +1,29 @@
 export const styleQuiz = [
     {
-        question: "주말 외출 시 선호하는 스타일은?",
+        question: "당신의 영감을 깨우는 시각적 무드는?",
         options: [
-            { text: "심플한 화이트 티셔츠 + 데님", style: "Minimal", image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&h=300&fit=crop" },
-            { text: "오버사이즈 후디 + 카고 팬츠", style: "Street", image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=300&fit=crop" },
-            { text: "테일러드 재킷 + 슬랙스", style: "Classic", image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&h=300&fit=crop" },
-            { text: "빈티지 블라우스 + 플리츠 스커트", style: "Romantic", image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=300&fit=crop" }
+            { text: "Minimalist Architect", style: "Minimal / Clean / Form", image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=800&q=80" },
+            { text: "Neo-Romanticist", style: "Fluid / Poetic / Texture", image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80" },
+            { text: "Avant-Garde Explorer", style: "Bold / Experimental / Art", image: "https://images.unsplash.com/photo-1509631179647-b849389274e9?w=800&q=80" },
+            { text: "Modern Heritage", style: "Classic / Quality / Timeless", image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80" }
         ]
     },
     {
-        question: "한 달 의류 구매 예산은?",
+        question: "당신의 옷장이 가장 빛나야 할 순간은?",
         options: [
-            { text: "10만원 이하", budget: "entry" },
-            { text: "10-30만원", budget: "mid" },
-            { text: "30-50만원", budget: "premium" },
-            { text: "50만원 이상", budget: "luxury" }
+            { text: "Daily High-End", detail: "일상의 격을 높이는 오피스 & 크리에이티브 시나리오" },
+            { text: "Night Out / Artistic", detail: "갤러리 오프닝부터 특별한 프라이빗 파티까지" },
+            { text: "Global Voyager", detail: "기능성과 스타일을 동시에 갖춘 글로벌 라이프스타일" },
+            { text: "Quiet Luxury", detail: "조용하고 우아하게 드러나는 본질적인 아름다움" }
         ]
     },
     {
-        question: "주로 쇼핑하는 시간대는?",
+        question: "스타일링에서 가장 타협할 수 없는 가치는?",
         options: [
-            { text: "출근 전 아침", time: "morning" },
-            { text: "점심시간", time: "lunch" },
-            { text: "퇴근 후 저녁", time: "evening" },
-            { text: "주말 낮", time: "weekend" }
+            { text: "The Silhouette", detail: "옷이 몸을 감싸고 구조화하는 완벽한 피팅" },
+            { text: "The Material", detail: "피부에 닿는 질감과 소재가 주는 본연의 퀄리티" },
+            { text: "The Story", detail: "브랜드가 가진 역사와 디자이너의 독창적 철학" },
+            { text: "The Innovation", detail: "새로운 소재와 기술이 결합된 진보적인 패션" }
         ]
     }
 ];

@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, Search, X, ChevronDown, User } from 'lucide-react';
+import { Menu, Search, X, ChevronDown, User, ShoppingBag, Bookmark } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
 export default function Navigation() {
     const pathname = usePathname();
     const router = useRouter();
-    const { isSubscriber, setIsSubscriber, setUserProfile, showDarkMode, setShowDarkMode, setShowStyleQuiz } = useApp();
+    const { isSubscriber, setIsSubscriber, setUserProfile, showDarkMode, setShowDarkMode, setShowStyleQuiz, cartItems } = useApp();
     const [menuOpen, setMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -33,24 +33,24 @@ export default function Navigation() {
         <nav className={`fixed top-0 w-full ${showDarkMode ? 'bg-black text-white border-gray-800' : 'bg-white text-black border-gray-200'} border-b z-40 transition-colors`}>
             {/* Search Overlay */}
             {isSearchOpen && (
-                <div className="absolute top-0 left-0 w-full h-screen bg-white/95 z-50 flex flex-col pt-32 px-6 animate-fadeIn text-black">
+                <div className={`fixed inset-0 ${showDarkMode ? 'bg-black/95 text-white' : 'bg-white/95 text-black'} z-[100] flex flex-col pt-32 px-6 animate-fadeIn`}>
                     <button
                         onClick={() => setIsSearchOpen(false)}
-                        className="absolute top-8 right-8 p-2"
+                        className="absolute top-8 right-8 p-3 hover:scale-110 transition-transform"
                     >
-                        <X className="w-8 h-8" />
+                        <X className="w-10 h-10" />
                     </button>
-                    <form onSubmit={handleSearch} className="w-full max-w-4xl mx-auto border-b-2 border-black pb-4 flex items-center gap-4">
+                    <form onSubmit={handleSearch} className={`w-full max-w-5xl mx-auto border-b-2 ${showDarkMode ? 'border-white' : 'border-black'} pb-6 flex items-center gap-6`}>
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="SEARCH"
-                            className="flex-1 bg-transparent text-4xl font-black font-serif outline-none placeholder-gray-300 uppercase"
+                            placeholder="SEARCH VOX..."
+                            className="flex-1 bg-transparent text-5xl md:text-7xl font-black font-serif outline-none placeholder-gray-400 uppercase tracking-tighter"
                             autoFocus
                         />
-                        <button type="submit">
-                            <Search className="w-8 h-8" />
+                        <button type="submit" className="hover:text-vox-red transition-colors">
+                            <Search className="w-10 h-10 md:w-12 md:h-12" />
                         </button>
                     </form>
                 </div>
@@ -96,10 +96,23 @@ export default function Navigation() {
 
                     {/* Hamburger / Mobile Toggle */}
                     <div className="flex items-center gap-4 lg:gap-8">
-                        {/* Search Icon (Visible) */}
                         <button onClick={() => setIsSearchOpen(true)} className="hover:opacity-60">
                             <Search className="w-5 h-5 md:w-6 md:h-6" />
                         </button>
+
+                        {/* Cart Icon - Only show when logged in */}
+                        {isSubscriber && (
+                            <>
+                                <Link href="/cart" className="hover:opacity-60 relative group" title="Shopping Bag">
+                                    <ShoppingBag className="w-5 h-5 md:w-6 md:h-6" />
+                                    {cartItems.length > 0 && (
+                                        <span className="absolute -top-2 -right-2 bg-vox-red text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full animate-bounce">
+                                            {cartItems.length}
+                                        </span>
+                                    )}
+                                </Link>
+                            </>
+                        )}
 
                         {/* User Icon */}
                         <button onClick={() => isSubscriber ? router.push('/dashboard') : router.push('/login')} className="hover:opacity-60">
@@ -133,17 +146,18 @@ export default function Navigation() {
                             <Link href="/" onClick={() => setMenuOpen(false)} className="hover:translate-x-2 transition-transform">Home</Link>
                             <Link href="/archive" onClick={() => setMenuOpen(false)} className="hover:translate-x-2 transition-transform">Archive</Link>
                             {['Fashion', 'Beauty', 'Culture', 'Runway', 'Video'].map((item) => (
-                                <Link key={item} href="/archive" onClick={() => setMenuOpen(false)} className="hover:translate-x-2 transition-transform">
+                                <Link key={item} href={`/${item.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="hover:translate-x-2 transition-transform">
                                     {item}
                                 </Link>
                             ))}
+                            <Link href="/cart" onClick={() => setMenuOpen(false)} className="hover:translate-x-2 transition-transform italic text-vox-red/80 uppercase tracking-widest text-lg">My Bag ({cartItems.length})</Link>
 
-                            <div className="h-px bg-gray-200 my-2" />
+                            <div className={`h-px ${showDarkMode ? 'bg-gray-800' : 'bg-gray-200'} my-2`} />
 
                             {isSubscriber ? (
                                 <>
                                     <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="text-vox-red hover:translate-x-2 transition-transform">My Dashboard</Link>
-                                    <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="text-left hover:translate-x-2 transition-transform text-gray-500 text-lg">Logout</button>
+                                    <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="text-left hover:translate-x-2 transition-transform text-gray-500 text-lg font-serif">Logout</button>
                                 </>
                             ) : (
                                 <Link href="/login" onClick={() => setMenuOpen(false)} className="hover:translate-x-2 transition-transform">Login / Join</Link>
@@ -151,12 +165,20 @@ export default function Navigation() {
                         </div>
 
                         {/* Bottom Actions */}
-                        <div className="mt-auto pt-8 border-t border-gray-200">
+                        <div className={`mt-auto pt-8 border-t ${showDarkMode ? 'border-gray-800' : 'border-gray-200'}`}>
                             <button
                                 onClick={() => setShowDarkMode(!showDarkMode)}
-                                className="flex items-center gap-2 text-sm font-bold tracking-widest hover:opacity-60"
+                                className="flex items-center gap-2 text-sm font-bold tracking-widest hover:opacity-60 mb-4"
                             >
                                 {showDarkMode ? 'LIGHT MODE' : 'DARK MODE'}
+                            </button>
+
+                            {/* DEV: 구독자 상태 토글 (개발용) */}
+                            <button
+                                onClick={() => setIsSubscriber(!isSubscriber)}
+                                className="flex items-center gap-2 text-xs font-bold tracking-widest hover:opacity-60 text-gray-500"
+                            >
+                                [DEV] {isSubscriber ? '구독자 모드 OFF' : '구독자 모드 ON'}
                             </button>
                         </div>
                     </div>

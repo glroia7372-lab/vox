@@ -1,6 +1,7 @@
 import { AppProvider } from '@/context/AppContext';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import GlobalModals from '@/components/GlobalModals';
 import './globals.css';
 
 export const metadata = {
@@ -13,6 +14,7 @@ export default function RootLayout({ children }) {
     <html lang="ko">
       <body style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
         <AppProvider>
+          <GlobalModals />
           <Navigation />
           <main>{children}</main>
           <Footer />

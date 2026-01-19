@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import { useApp } from '@/context/AppContext';
+import { useApp, UserProfile } from '@/context/AppContext';
 import { styleQuiz } from '@/lib/data';
 
 export default function StyleQuiz() {
-    const { setUserProfile, setShowStyleQuiz, setShowSubscribeModal } = useApp();
+    const { isSubscriber, setIsSubscriber, setUserProfile, setShowStyleQuiz, setShowSubscribeModal, showDarkMode } = useApp();
     const [quizStep, setQuizStep] = useState(0);
     const [answers, setAnswers] = useState<Record<number, any>>({});
 
@@ -18,99 +18,123 @@ export default function StyleQuiz() {
             setQuizStep(quizStep + 1);
         } else {
             // 퀴즈 완료 - 프로필 생성
-            const profile = {
-                style: newAnswers[0]?.style || 'Fashion Lover',
-                budget: newAnswers[1]?.budget || 'mid',
-                time: newAnswers[2]?.time || 'evening',
-                preferences: ['Sustainable', 'Minimalism', 'Quality'],
+            // The UserProfile interface definition was incorrectly placed in the provided edit snippet.
+            // It should be defined externally (e.g., in AppContext.tsx or a types file).
+            // We are keeping the usage of UserProfile type here as it was, assuming its definition
+            // is updated elsewhere as per the instruction.
+            const profile: UserProfile = {
+                style: newAnswers[0]?.text || 'Fashion Lover',
+                context: newAnswers[1]?.text || 'Lifestyle',
+                priority: newAnswers[2]?.text || 'Quality',
+                budget: '',
+                time: '',
+                preferences: [newAnswers[0]?.style, newAnswers[1]?.text, newAnswers[2]?.text],
                 completedAt: new Date().toISOString()
             };
 
             setUserProfile(profile);
+            setIsSubscriber(true);
             setShowStyleQuiz(false);
             setShowSubscribeModal(true);
         }
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
-            <div className="bg-white text-gray-900 max-w-3xl w-full rounded-lg p-8 max-h-[90vh] overflow-y-auto">
-                {/* 헤더 */}
-                <div className="flex items-center justify-between mb-6">
-                    <div>
-                        <h2 className="text-3xl font-serif mb-2">Style Voice 진단</h2>
-                        <p className="text-gray-600">3분이면 당신의 패션 DNA를 찾을 수 있습니다</p>
-                    </div>
-                    <button
-                        onClick={() => setShowStyleQuiz(false)}
-                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                    >
-                        <X className="w-6 h-6" />
-                    </button>
-                </div>
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-3xl z-[100] flex items-center justify-center p-6 animate-fadeIn">
+            <div className={`relative w-full max-w-6xl p-8 md:p-16 rounded-[3rem] shadow-2xl border flex flex-col max-h-[90vh] overflow-hidden ${showDarkMode ? 'bg-black border-white/10' : 'bg-white border-black/5'}`}>
 
-                {/* 진행바 */}
-                <div className="mb-8">
-                    <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-gray-600">
-                            Question {quizStep + 1} of {styleQuiz.length}
+                {/* Close Button */}
+                <button
+                    onClick={() => setShowStyleQuiz(false)}
+                    className="absolute top-8 right-8 p-3 hover:bg-vox-red/10 rounded-full transition-all group z-10"
+                >
+                    <X className={`w-8 h-8 group-hover:rotate-90 transition-transform ${showDarkMode ? 'text-white' : 'text-black'}`} />
+                </button>
+
+                {/* Progress Bar */}
+                <div className="mb-12 relative z-10">
+                    <div className="flex items-center justify-between mb-4">
+                        <span className="text-[10px] font-black tracking-[0.4em] text-gray-400 uppercase">
+                            Step {quizStep + 1} of {styleQuiz.length}
                         </span>
-                        <span className="text-sm font-medium text-vox-red">
-                            {Math.round(((quizStep + 1) / styleQuiz.length) * 100)}%
-                        </span>
+                        <div className="text-right">
+                            <h2 className="text-2xl font-serif italic text-vox-red">Style DNA Scan</h2>
+                        </div>
                     </div>
-                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className={`w-full h-1 ${showDarkMode ? 'bg-white/5' : 'bg-gray-100'} rounded-full overflow-hidden`}>
                         <div
-                            className="h-full transition-all duration-300 rounded-full bg-vox-red"
+                            className="h-full transition-all duration-1000 ease-out bg-vox-red shadow-[0_0_15px_rgba(255,0,0,0.6)]"
                             style={{ width: `${((quizStep + 1) / styleQuiz.length) * 100}%` }}
                         />
                     </div>
                 </div>
 
-                {/* 질문 */}
-                <div className="mb-8">
-                    <h3 className="text-2xl mb-6 font-serif">
+                {/* Question */}
+                <div className="flex-1 overflow-y-auto mb-8 px-2 custom-scrollbar relative z-10">
+                    <h3 className={`text-3xl md:text-6xl font-serif mb-12 leading-[1.1] tracking-tighter ${showDarkMode ? 'text-white' : 'text-black'}`}>
                         {styleQuiz[quizStep].question}
                     </h3>
 
-                    <div className="grid md:grid-cols-2 gap-4">
-                        {styleQuiz[quizStep].options.map((option, idx) => (
+                    <div className={`grid ${(styleQuiz[quizStep].options[0] as any).image ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-2'} gap-6`}>
+                        {styleQuiz[quizStep].options.map((option: any, idx) => (
                             <button
                                 key={idx}
                                 onClick={() => handleAnswer(option)}
-                                className="relative group overflow-hidden rounded-lg border-2 border-gray-200 hover:border-gray-900 transition-all text-left"
+                                className={`relative group overflow-hidden rounded-3xl border-2 transition-all duration-500 text-left flex flex-col h-full ${showDarkMode
+                                    ? 'border-white/5 hover:border-vox-red bg-white/5'
+                                    : 'border-black/5 hover:border-vox-red bg-gray-50'
+                                    } hover:-translate-y-2 shadow-xl hover:shadow-vox-red/10`}
                             >
                                 {option.image && (
-                                    <div className="h-48 overflow-hidden">
+                                    <div className="h-64 sm:h-80 overflow-hidden relative">
                                         <img
                                             src={option.image}
                                             alt={option.text}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800';
+                                            }}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100"
                                         />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-20 transition-opacity" />
                                     </div>
                                 )}
-                                <div className="p-4">
-                                    <p className="font-medium">{option.text}</p>
-                                    {option.style && (
-                                        <span className="text-xs text-gray-500 mt-1 block">
-                                            {option.style}
-                                        </span>
-                                    )}
+                                <div className="p-8 flex flex-col flex-1 justify-between">
+                                    <div>
+                                        <p className={`text-xl font-bold mb-3 uppercase tracking-tight ${showDarkMode ? 'text-white' : 'text-black'}`}>{option.text}</p>
+                                        {option.style && (
+                                            <p className="text-[10px] font-black tracking-widest text-vox-red uppercase mb-4 opacity-80">
+                                                {option.style}
+                                            </p>
+                                        )}
+                                        {option.detail && (
+                                            <p className="text-sm opacity-60 leading-relaxed font-light mb-4 italic">
+                                                {option.detail}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <div className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center group-hover:bg-vox-red group-hover:border-vox-red transition-all group-hover:scale-110">
+                                            <div className="w-2 h-2 bg-gray-400 group-hover:bg-white rounded-full" />
+                                        </div>
+                                    </div>
                                 </div>
                             </button>
                         ))}
                     </div>
                 </div>
 
-                {/* 뒤로가기 버튼 */}
+                {/* Footer Insight */}
                 {quizStep > 0 && (
                     <button
                         onClick={() => setQuizStep(quizStep - 1)}
-                        className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                        className="self-start text-[10px] font-black tracking-[0.3em] text-gray-500 hover:text-vox-red transition-all uppercase mb-4"
                     >
-                        ← 이전 질문
+                        ← RETRACE INSIGHT
                     </button>
                 )}
+                <div className="mt-auto opacity-20 text-[8px] font-black tracking-[0.5em] text-center uppercase">
+                    VOX BIOMETRIC STYLE ANALYSIS ENGINE V2.0
+                </div>
             </div>
         </div>
     );

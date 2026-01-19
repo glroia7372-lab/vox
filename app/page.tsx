@@ -1,22 +1,16 @@
 'use client';
 
+import Link from 'next/link';
 import { useApp } from '@/context/AppContext';
-import StyleQuiz from '@/components/StyleQuiz';
-import SubscribeModal from '@/components/SubscribeModal';
 import { Clock, Sparkles, TrendingUp, Star } from 'lucide-react';
 
 export default function HomePage() {
-  const { showDarkMode, setShowStyleQuiz, showStyleQuiz, showSubscribeModal } = useApp();
+  const { showDarkMode, setShowStyleQuiz } = useApp();
 
   return (
     <>
-      {/* 스타일 진단 모달 */}
-      {showStyleQuiz && <StyleQuiz />}
-
-      {/* 구독 모달 */}
-      {showSubscribeModal && <SubscribeModal />}
-
       <div className={showDarkMode ? 'bg-black text-white' : 'bg-white text-black'}>
+        {/* DEV_TEST_MARKER */}
         {/* Hero Section */}
         <section className="pt-20 px-6">
           <div className="max-w-7xl mx-auto py-20">
@@ -38,15 +32,21 @@ export default function HomePage() {
                   >
                     스타일 진단 시작하기
                   </button>
-                  <button className="px-8 py-4 border border-gray-300 hover:border-gray-900 transition-colors rounded-lg">
+                  <Link
+                    href="/archive"
+                    className="px-8 py-4 border border-gray-300 hover:border-gray-900 transition-colors rounded-lg inline-flex items-center justify-center"
+                  >
                     둘러보기
-                  </button>
+                  </Link>
                 </div>
               </div>
               <div className="relative h-96 lg:h-[600px]">
                 <img
                   src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&h=800&fit=crop"
                   alt="VOX Fashion"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1539109132314-3477524c8d95?w=1200';
+                  }}
                   className="w-full h-full object-cover rounded-lg shadow-2xl"
                 />
               </div>

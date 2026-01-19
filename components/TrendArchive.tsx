@@ -12,6 +12,9 @@ export default function TrendArchive() {
                         <div className="aspect-[3/4] overflow-hidden bg-gray-100 mb-6 relative">
                             <img
                                 src={`https://images.unsplash.com/photo-1515886657613-91f3515b0c78?auto=format&fit=crop&w=800&q=80&idx=${i}`}
+                                onError={(e) => {
+                                    (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78?w=800';
+                                }}
                                 className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
                                 alt={`Trend ${i}`}
                             />
