@@ -47,7 +47,7 @@ export default function DashboardPage() {
     const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
     const [pinSearchQuery, setPinSearchQuery] = useState('');
     const [isEditingBio, setIsEditingBio] = useState(false);
-    const [bioText, setBioText] = useState(userProfile?.description || 'Fashion curator and trend analyst at VOX.');
+    const [bioText, setBioText] = useState(userProfile?.description || 'VOX가 정제한 당신만의 고유한 패션 미학 아카이브.');
     const [organizingPinId, setOrganizingPinId] = useState<string | null>(null);
     const [layoutMode, setLayoutMode] = useState<'masonry' | 'grid'>('masonry');
     const [isShared, setIsShared] = useState(false);
@@ -212,7 +212,7 @@ export default function DashboardPage() {
                             </div>
                         </div>
                         <h1 className="text-4xl md:text-6xl font-serif font-black tracking-tighter mb-4 uppercase">
-                            {userProfile?.name || userProfile?.style || 'VOX LOVER'}
+                            {userProfile?.name || userProfile?.style || 'VOX CURATOR'}
                         </h1>
 
                         <div className="max-w-xl mx-auto mb-8 px-4">
@@ -286,7 +286,7 @@ export default function DashboardPage() {
                                 <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-vox-red transition-colors" />
                                 <input
                                     type="text"
-                                    placeholder="SEARCH YOUR ARCHIVE..."
+                                    placeholder="ARCHIVE SEARCH..."
                                     value={pinSearchQuery}
                                     onChange={(e) => setPinSearchQuery(e.target.value)}
                                     className="w-full pl-16 pr-8 py-5 rounded-3xl bg-gray-50 dark:bg-gray-950 text-[10px] font-black tracking-widest border-none outline-none ring-1 ring-gray-100 dark:ring-gray-900 focus:ring-2 focus:ring-vox-red transition-all"
@@ -297,7 +297,7 @@ export default function DashboardPage() {
                                 className="bg-vox-red text-white p-5 px-8 rounded-3xl hover:scale-105 active:scale-95 transition-all shadow-2xl flex items-center gap-3"
                             >
                                 <Plus className="w-5 h-5" />
-                                <span className="text-[10px] font-black tracking-widest uppercase hidden md:inline">New theme</span>
+                                <span className="text-[10px] font-black tracking-widest uppercase hidden md:inline">New curation</span>
                             </button>
                         </div>
                     </div>
@@ -319,7 +319,7 @@ export default function DashboardPage() {
                                 </button>
 
                                 <h2 className="text-6xl md:text-8xl font-serif font-black tracking-tighter uppercase mb-6 leading-none">
-                                    {selectedBoardId === 'all-saved' ? 'Everything I Love' : activeBoard?.name}
+                                    {selectedBoardId === 'all-saved' ? 'Everything I Archive' : activeBoard?.name}
                                 </h2>
                                 <div className="flex items-center justify-center gap-4 text-xs font-black tracking-[0.2em] text-gray-400 uppercase">
                                     <span>{selectedBoardId === 'all-saved' ? bookmarks.length : boardPins.length} curated pins</span>
@@ -454,7 +454,7 @@ export default function DashboardPage() {
                                     </div>
                                     <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
                                 </div>
-                                <h3 className="text-2xl font-serif font-black uppercase tracking-tighter group-hover:text-vox-red transition-all">Everything I Love</h3>
+                                <h3 className="text-2xl font-serif font-black uppercase tracking-tighter group-hover:text-vox-red transition-all">My Whole Archive</h3>
                                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mt-2">{bookmarks.length} PINS COLLECTED</p>
                             </div>
 
@@ -513,8 +513,8 @@ export default function DashboardPage() {
                                     <Plus className="w-14 h-14" />
                                 </div>
                                 <div className="text-center px-6">
-                                    <span className="text-[10px] font-black tracking-[0.4em] uppercase text-gray-400 group-hover:text-vox-red">START NEW THEME</span>
-                                    <p className="text-[9px] text-gray-300 mt-2 font-bold uppercase tracking-widest group-hover:opacity-0 transition-opacity">Build your next inspiration board</p>
+                                    <span className="text-[10px] font-black tracking-[0.4em] uppercase text-gray-400 group-hover:text-vox-red">START NEW CURATION</span>
+                                    <p className="text-[9px] text-gray-300 mt-2 font-bold uppercase tracking-widest group-hover:opacity-0 transition-opacity">당신의 다음 영감을 설계하세요</p>
                                 </div>
                             </div>
                         </div>

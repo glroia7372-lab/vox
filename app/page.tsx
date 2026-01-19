@@ -23,20 +23,20 @@ export default function HomePage() {
                   Find Your Voice,<br />Define Your Style.
                 </h1>
                 <p className="text-xl text-gray-600 leading-relaxed">
-                  바쁜 2030을 위한 초개인화 패션 뉴스레터 서비스. 3분이면 당신만의 스타일 DNA를 찾을 수 있습니다.
+                  오직 당신만을 위해 정제된 에디토리얼, VOX.<br />3분의 진단을 통해 당신의 스타일 본질을 발견하세요.
                 </p>
                 <div className="flex gap-4">
                   <button
                     onClick={() => setShowStyleQuiz(true)}
                     className="px-8 py-4 text-white bg-vox-red hover:opacity-90 transition-opacity rounded-lg"
                   >
-                    스타일 진단 시작하기
+                    스타일 DNA 진단 시작
                   </button>
                   <Link
                     href="/archive"
                     className="px-8 py-4 border border-gray-300 hover:border-gray-900 transition-colors rounded-lg inline-flex items-center justify-center"
                   >
-                    둘러보기
+                    아카이브 탐색
                   </Link>
                 </div>
               </div>
@@ -59,7 +59,7 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-4xl mb-4 font-serif">Why VOX?</h2>
-              <p className="text-xl text-gray-600">데이터 기반 패션 큐레이션의 새로운 기준</p>
+              <p className="text-xl text-gray-600">데이터가 선별하고 감각이 정제한 패션 미학의 새로운 기준</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-12">
@@ -67,9 +67,9 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center bg-vox-red">
                   <Clock className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-2xl mb-4 font-serif">3분 요약</h3>
+                <h3 className="text-2xl mb-4 font-serif">3분 브리핑</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  한 주간의 방대한 패션 트렌드를 핵심만 담은 브리핑으로 압축합니다.
+                  방대한 글로벌 패션 인텔리전스를 매주 월요일, 단 3분의 통찰로 응축하여 전달합니다.
                 </p>
               </div>
 
@@ -77,9 +77,9 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center bg-vox-red">
                   <Sparkles className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-2xl mb-4 font-serif">AI 개인화</h3>
+                <h3 className="text-2xl mb-4 font-serif">하이퍼 개인화</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  스타일 DNA 분석을 통해 나에게 꼭 맞는 정보만 선별합니다.
+                  스타일 DNA 분석 시스템이 수만 개의 소스 중 당신의 취향에 부합하는 정수만을 가려냅니다.
                 </p>
               </div>
 
@@ -87,9 +87,9 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center bg-vox-red">
                   <TrendingUp className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-2xl mb-4 font-serif">실시간 트렌드</h3>
+                <h3 className="text-2xl mb-4 font-serif">실시간 트렌드 엔진</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  전 세계 패션 트렌드를 실시간으로 수집하고 분석합니다.
+                  전 세계 패션 수도의 트렌드를 초 단위로 수집하여, 변화무쌍한 패션계의 흐름을 실시간으로 분석합니다.
                 </p>
               </div>
             </div>

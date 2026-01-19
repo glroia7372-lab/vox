@@ -44,7 +44,9 @@ export async function fetchVideos(categoryId: string = 'all'): Promise<YouTubeVi
 
         url += `&q=${encodeURIComponent(category.query)}`;
 
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            next: { revalidate: 3600 } // Cache for 1 hour
+        });
         if (!response.ok) throw new Error('YouTube API request failed');
 
         const data = await response.json();
