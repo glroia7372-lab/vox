@@ -148,18 +148,13 @@ export default function Navigation() {
                                 <div className="flex flex-col gap-4 text-3xl sm:text-4xl lg:text-5xl font-serif italic">
                                     <Link href="/" onClick={() => setMenuOpen(false)} className="group flex items-baseline gap-4 hover:translate-x-2 transition-transform">
                                         <span>Home</span>
-                                        <span className="text-xs font-sans not-italic font-bold text-gray-300 group-hover:text-vox-red uppercase tracking-widest">홈</span>
                                     </Link>
                                     <Link href="/archive" onClick={() => setMenuOpen(false)} className="group flex items-baseline gap-4 hover:translate-x-2 transition-transform">
                                         <span>Trend Archive</span>
-                                        <span className="text-xs font-sans not-italic font-bold text-gray-300 group-hover:text-vox-red uppercase tracking-widest">아카이브</span>
                                     </Link>
                                     {['Fashion', 'Beauty', 'Culture', 'Runway', 'Video'].map((item) => (
                                         <Link key={item} href={`/${item.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="group flex items-baseline gap-4 hover:translate-x-2 transition-transform">
                                             <span>{item}</span>
-                                            <span className="text-xs font-sans not-italic font-bold text-gray-300 group-hover:text-vox-red uppercase tracking-widest">
-                                                {item === 'Fashion' ? '패션' : item === 'Beauty' ? '뷰티' : item === 'Culture' ? '컬처' : item === 'Runway' ? '런웨이' : '비디오'}
-                                            </span>
                                         </Link>
                                     ))}
                                 </div>
@@ -207,7 +202,7 @@ export default function Navigation() {
                                 onClick={() => setIsSubscriber(!isSubscriber)}
                                 className="flex items-center gap-2 text-xs font-bold tracking-widest hover:opacity-60 text-gray-500"
                             >
-                                [DEV] {isSubscriber ? '구독자 모드 OFF' : '구독자 모드 ON'}
+                                [DEV] {isSubscriber ? 'SUB ON' : 'SUB OFF'}
                             </button>
                         </div>
                     </div>

@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { supabase } from '@/lib/supabase';
+
 
 export default function LoginPage() {
     const router = useRouter();
@@ -23,6 +25,8 @@ export default function LoginPage() {
             // 더미 프로필 설정
             setUserProfile({
                 style: 'Minimalist',
+                context: 'Daily',
+                priority: 'Quality',
                 budget: 'mid',
                 time: 'evening',
                 preferences: ['Modern', 'Chic'],
@@ -32,6 +36,41 @@ export default function LoginPage() {
             router.push('/dashboard');
         }, 1500);
     };
+
+    const handleKakaoLogin = async () => {
+        setIsLoading(true);
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'kakao',
+            options: {
+                redirectTo: `${window.location.origin}/auth/callback`,
+                queryParams: {
+                    scope: 'profile_nickname'
+                }
+            },
+        });
+
+        if (error) {
+            console.error('Error logging in with Kakao:', error.message);
+            setIsLoading(false);
+        }
+    };
+
+    const handleNaverLogin = () => {
+        const clientId = process.env.NEXT_PUBLIC_NAVER_CLIENT_ID;
+        const redirectUri = encodeURIComponent(`${window.location.origin}/auth/callback`);
+        const state = Math.random().toString(36).substring(7);
+
+        // Save state to verify later if needed
+        localStorage.setItem('naver_auth_state', state);
+
+        const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}`;
+
+        window.location.href = naverAuthUrl;
+    };
+
+
+
+
 
     return (
         <div className="min-h-screen flex bg-white">
@@ -144,10 +183,18 @@ export default function LoginPage() {
                     <div className="pt-8 border-t border-gray-100">
                         <p className="text-center text-xs text-gray-400 mb-6 uppercase tracking-widest">Or continue with</p>
                         <div className="grid grid-cols-2 gap-4">
-                            <button className="flex items-center justify-center gap-3 py-3 border border-gray-200 hover:border-black transition-colors">
-                                <span className="font-serif">Google</span>
+                            <button
+                                onClick={handleNaverLogin}
+                                disabled={isLoading}
+                                className="flex items-center justify-center gap-3 py-3 border border-gray-200 hover:border-black transition-colors bg-[#03C75A] text-white border-none"
+                            >
+                                <span className="font-serif">Naver</span>
                             </button>
-                            <button className="flex items-center justify-center gap-3 py-3 border border-gray-200 hover:border-black transition-colors">
+                            <button
+                                onClick={handleKakaoLogin}
+                                disabled={isLoading}
+                                className="flex items-center justify-center gap-3 py-3 border border-gray-200 hover:border-black transition-colors bg-[#FEE500] text-black border-none"
+                            >
                                 <span className="font-serif">Kakao</span>
                             </button>
                         </div>
