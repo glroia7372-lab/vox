@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useAppContext } from '@/context/AppContext';
+import { useApp } from "@/context/AppContext";
 
 export function useUserProfile() {
-    const { user, setUser } = useAppContext();
-    return { user, setUser };
+  const { userProfile, setUserProfile } = useApp();
+  return { user: userProfile, setUser: setUserProfile };
 }
