@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useApp } from "@/context/AppContext";
-import { XCircle, ArrowLeft, RefreshCw, Loader2 } from "lucide-react";
+import { XCircle, ArrowLeft, RefreshCw, Loader2, Ban } from "lucide-react";
 import Link from "next/link";
 
 function PaymentFailContent() {
@@ -14,10 +14,17 @@ function PaymentFailContent() {
   const errorMessage = searchParams.get("message");
   const orderId = searchParams.get("orderId");
 
+  // 결제 취소 여부 확인
+  const isCanceled = errorCode === "PAY_PROCESS_CANCELED" || 
+                     errorCode === "USER_CANCEL" ||
+                     errorMessage?.includes("취소") ||
+                     errorMessage?.includes("cancel");
+
   // Map common error codes to user-friendly messages
   const getErrorDescription = (code: string | null) => {
     switch (code) {
       case "PAY_PROCESS_CANCELED":
+      case "USER_CANCEL":
         return "결제가 취소되었습니다.";
       case "PAY_PROCESS_ABORTED":
         return "결제 처리 중 오류가 발생했습니다.";
@@ -34,7 +41,7 @@ function PaymentFailContent() {
       case "INVALID_CARD_NUMBER":
         return "유효하지 않은 카드 번호입니다.";
       default:
-        return errorMessage || "결제 처리 중 문제가 발생했습니다.";
+        return errorMessage ? decodeURIComponent(errorMessage) : "결제 처리 중 문제가 발생했습니다.";
     }
   };
 
@@ -45,56 +52,88 @@ function PaymentFailContent() {
       }`}
     >
       <div className="max-w-2xl mx-auto">
-        {/* Fail Header */}
+        {/* Fail/Cancel Header */}
         <div className="text-center py-12">
-          <XCircle className="w-20 h-20 mx-auto mb-6 text-red-500" />
-          <h1 className="text-4xl font-serif mb-4">결제에 실패했습니다</h1>
-          <p className="text-gray-500">{getErrorDescription(errorCode)}</p>
+          {isCanceled ? (
+            <>
+              <Ban className="w-20 h-20 mx-auto mb-6 text-gray-400" />
+              <h1 className="text-4xl font-serif mb-4">결제가 취소되었습니다</h1>
+              <p className="text-gray-500">
+                결제를 취소하셨습니다. 장바구니의 상품은 그대로 유지됩니다.
+              </p>
+            </>
+          ) : (
+            <>
+              <XCircle className="w-20 h-20 mx-auto mb-6 text-red-500" />
+              <h1 className="text-4xl font-serif mb-4">결제에 실패했습니다</h1>
+              <p className="text-gray-500">{getErrorDescription(errorCode)}</p>
+            </>
+          )}
         </div>
 
-        {/* Error Details */}
-        <div
-          className={`p-8 rounded-2xl mb-8 ${
-            showDarkMode ? "bg-gray-900 border border-gray-800" : "bg-gray-50"
-          }`}
-        >
-          <h2 className="text-xl font-serif mb-6">오류 정보</h2>
-          <div className="space-y-4">
-            {orderId && (
-              <div className="flex justify-between">
-                <span className="text-gray-500">주문번호</span>
-                <span className="font-mono text-sm">{orderId}</span>
-              </div>
-            )}
-            {errorCode && (
-              <div className="flex justify-between">
-                <span className="text-gray-500">오류 코드</span>
-                <span className="font-mono text-sm">{errorCode}</span>
-              </div>
-            )}
-            {errorMessage && (
-              <div className="flex flex-col gap-2">
-                <span className="text-gray-500">상세 메시지</span>
-                <span className="text-sm">{decodeURIComponent(errorMessage)}</span>
-              </div>
-            )}
+        {/* Error Details - 취소가 아닌 경우에만 표시 */}
+        {!isCanceled && (errorCode || errorMessage || orderId) && (
+          <div
+            className={`p-8 rounded-2xl mb-8 ${
+              showDarkMode ? "bg-gray-900 border border-gray-800" : "bg-gray-50"
+            }`}
+          >
+            <h2 className="text-xl font-serif mb-6">오류 정보</h2>
+            <div className="space-y-4">
+              {orderId && (
+                <div className="flex justify-between">
+                  <span className="text-gray-500">주문번호</span>
+                  <span className="font-mono text-sm">{orderId}</span>
+                </div>
+              )}
+              {errorCode && (
+                <div className="flex justify-between">
+                  <span className="text-gray-500">오류 코드</span>
+                  <span className="font-mono text-sm">{errorCode}</span>
+                </div>
+              )}
+              {errorMessage && (
+                <div className="flex flex-col gap-2">
+                  <span className="text-gray-500">상세 메시지</span>
+                  <span className="text-sm">{decodeURIComponent(errorMessage)}</span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Help Section */}
-        <div
-          className={`p-8 rounded-2xl mb-8 ${
-            showDarkMode ? "bg-gray-900 border border-gray-800" : "bg-gray-50"
-          }`}
-        >
-          <h2 className="text-xl font-serif mb-4">도움이 필요하신가요?</h2>
-          <ul className="space-y-3 text-gray-500">
-            <li>• 카드 정보가 올바른지 확인해주세요.</li>
-            <li>• 결제 한도를 확인해주세요.</li>
-            <li>• 다른 결제 수단을 시도해보세요.</li>
-            <li>• 문제가 지속되면 카드사에 문의해주세요.</li>
-          </ul>
-        </div>
+        {/* Help Section - 취소가 아닌 경우에만 표시 */}
+        {!isCanceled && (
+          <div
+            className={`p-8 rounded-2xl mb-8 ${
+              showDarkMode ? "bg-gray-900 border border-gray-800" : "bg-gray-50"
+            }`}
+          >
+            <h2 className="text-xl font-serif mb-4">도움이 필요하신가요?</h2>
+            <ul className="space-y-3 text-gray-500">
+              <li>• 카드 정보가 올바른지 확인해주세요.</li>
+              <li>• 결제 한도를 확인해주세요.</li>
+              <li>• 다른 결제 수단을 시도해보세요.</li>
+              <li>• 문제가 지속되면 카드사에 문의해주세요.</li>
+            </ul>
+          </div>
+        )}
+
+        {/* 취소된 경우 안내 메시지 */}
+        {isCanceled && (
+          <div
+            className={`p-8 rounded-2xl mb-8 ${
+              showDarkMode ? "bg-gray-900 border border-gray-800" : "bg-gray-50"
+            }`}
+          >
+            <h2 className="text-xl font-serif mb-4">안내</h2>
+            <ul className="space-y-3 text-gray-500">
+              <li>• 장바구니에 담긴 상품은 그대로 유지됩니다.</li>
+              <li>• 언제든지 다시 결제를 진행하실 수 있습니다.</li>
+              <li>• 결제 수단을 변경하여 다시 시도해보세요.</li>
+            </ul>
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4">
