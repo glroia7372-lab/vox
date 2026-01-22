@@ -3,9 +3,15 @@
 import { useApp } from "@/context/AppContext";
 import { ShoppingBag, Trash2, ChevronLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
   const { cartItems, removeFromCart, clearCart, showDarkMode } = useApp();
+  const router = useRouter();
+
+  const handleCheckout = () => {
+    router.push("/checkout");
+  };
 
   const subtotal = cartItems.reduce((acc: number, item: any) => {
     const price = parseFloat(item.price);
@@ -133,7 +139,10 @@ export default function CartPage() {
                     <span>${total.toFixed(2)}</span>
                   </div>
                 </div>
-                <button className="w-full py-4 bg-vox-red text-white rounded-full font-bold hover:opacity-90 transition-opacity mb-4">
+                <button 
+                  onClick={handleCheckout}
+                  className="w-full py-4 bg-vox-red text-white rounded-full font-bold hover:opacity-90 transition-opacity mb-4"
+                >
                   Checkout
                 </button>
                 <p className="text-[10px] text-center text-gray-500 uppercase tracking-widest">
