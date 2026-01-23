@@ -1,253 +1,388 @@
 'use client';
 
-import { useState } from 'react';
-import { Folder, Plus, Trash2, FolderOpen, Image as ImageIcon } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+    Plus,
+    MoreHorizontal,
+    Folder,
+    Bookmark,
+    Camera,
+    Trash2,
+    X,
+    ChevronRight,
+    Search,
+    Edit3,
+    ArrowLeft,
+    Layout,
+    Share2
+} from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
-interface SavedTrend {
-    id: number;
-    keyword: string;
-    category: string;
-    folderId: string;
-}
+export default function MoodBoard() {
+    const router = useRouter();
+    const {
+        userProfile,
+        showDarkMode,
+        bookmarks,
+        boards,
+        createBoard,
+        toggleBookmark,
+        toggleItemInBoard,
+        updateUserProfile,
+        deletedItems
+    } = useApp();
 
-interface MoodBoardFolder {
-    id: string;
-    name: string;
-    color: string;
-    items: SavedTrend[];
-}
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [newBoardName, setNewBoardName] = useState('');
+    const [activeTab, setActiveTab] = useState<'boards' | 'pins' | 'trash'>('boards');
+    const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
+    const [pinSearchQuery, setPinSearchQuery] = useState('');
+    const [isEditingBio, setIsEditingBio] = useState(false);
+    const [bioText, setBioText] = useState(userProfile?.description || 'VOX가 정제한 당신만의 고유한 패션 미학 아카이브.');
+    const [organizingPinId, setOrganizingPinId] = useState<string | null>(null);
+    const [layoutMode, setLayoutMode] = useState<'masonry' | 'grid'>('masonry');
+    const [isShared, setIsShared] = useState(false);
+    const [isAddingFromSaved, setIsAddingFromSaved] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
-interface MoodBoardProps {
-    bookmarkedTrends: number[];
-    allTrends: any[];
-}
-
-export default function MoodBoard({ bookmarkedTrends, allTrends }: MoodBoardProps) {
-    const { showDarkMode } = useApp();
-    const [folders, setFolders] = useState<MoodBoardFolder[]>([
-        { id: '1', name: '겨울 스타일', color: 'bg-blue-500', items: [] },
-        { id: '2', name: '럭셔리 브랜드', color: 'bg-purple-500', items: [] },
-        { id: '3', name: '스트릿 패션', color: 'bg-green-500', items: [] },
-    ]);
-    const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
-    const [showNewFolderModal, setShowNewFolderModal] = useState(false);
-    const [newFolderName, setNewFolderName] = useState('');
-
-    const colors = [
-        'bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500',
-        'bg-purple-500', 'bg-pink-500', 'bg-indigo-500', 'bg-orange-500'
-    ];
-
-    const createFolder = () => {
-        if (!newFolderName.trim()) return;
-
-        const newFolder: MoodBoardFolder = {
-            id: Date.now().toString(),
-            name: newFolderName,
-            color: colors[Math.floor(Math.random() * colors.length)],
-            items: []
-        };
-
-        setFolders([...folders, newFolder]);
-        setNewFolderName('');
-        setShowNewFolderModal(false);
-    };
-
-    const deleteFolder = (folderId: string) => {
-        if (confirm('정말 이 폴더를 삭제하시겠습니까?')) {
-            setFolders(folders.filter(f => f.id !== folderId));
-            if (selectedFolder === folderId) {
-                setSelectedFolder(null);
-            }
+    const handleCreateBoard = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (newBoardName.trim()) {
+            createBoard(newBoardName);
+            setNewBoardName('');
+            setIsCreateModalOpen(false);
         }
     };
 
-    const addToFolder = (folderId: string, trendId: number) => {
-        const trend = allTrends[trendId];
-        if (!trend) return;
-
-        setFolders(folders.map(folder => {
-            if (folder.id === folderId) {
-                const savedTrend: SavedTrend = {
-                    id: trendId,
-                    keyword: trend.keyword,
-                    category: trend.category,
-                    folderId: folderId
-                };
-                return {
-                    ...folder,
-                    items: [...folder.items, savedTrend]
-                };
-            }
-            return folder;
-        }));
+    const handleUpdateBio = () => {
+        updateUserProfile({ description: bioText });
+        setIsEditingBio(false);
     };
 
-    const removeFromFolder = (folderId: string, trendId: number) => {
-        setFolders(folders.map(folder => {
-            if (folder.id === folderId) {
-                return {
-                    ...folder,
-                    items: folder.items.filter(item => item.id !== trendId)
-                };
-            }
-            return folder;
-        }));
+    const handleToggleItemInBoard = (boardId: string, itemId: string) => {
+        toggleItemInBoard(boardId, itemId);
+        setOrganizingPinId(null);
     };
+
+    const handleShareBoard = () => {
+        const boardUrl = window.location.href + (selectedBoardId ? `?board=${selectedBoardId}` : '');
+        navigator.clipboard.writeText(boardUrl);
+        setIsShared(true);
+        setTimeout(() => setIsShared(false), 2000);
+    };
+
+    const toggleLayout = () => {
+        setLayoutMode(prev => prev === 'masonry' ? 'grid' : 'masonry');
+    };
+
+    const filteredPins = bookmarks.filter(pin =>
+        pin.title.toLowerCase().includes(pinSearchQuery.toLowerCase()) ||
+        pin.type.toLowerCase().includes(pinSearchQuery.toLowerCase())
+    );
+
+    const activeBoard = boards.find(b => b.id === selectedBoardId);
+    const boardPins = activeBoard ? bookmarks.filter(b => activeBoard.itemIds.includes(b.id)) : [];
+    const pinsInEverythingButNotThisBoard = bookmarks.filter(b => !activeBoard?.itemIds.includes(b.id));
 
     return (
-        <div className={`${showDarkMode ? 'bg-black border border-gray-800' : 'bg-gray-50'} rounded-lg p-8`}>
-            <div className="flex items-center justify-between mb-6">
-                <div>
-                    <h2 className="text-2xl mb-2 font-serif flex items-center gap-2">
-                        <FolderOpen className="w-6 h-6 text-vox-red" />
-                        나만의 무드보드
-                    </h2>
-                    <p className="text-sm text-gray-600">
-                        북마크한 트렌드를 폴더별로 정리하고 나만의 스타일 컬렉션을 만드세요
-                    </p>
-                </div>
-                <button
-                    onClick={() => setShowNewFolderModal(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-vox-red text-white rounded-lg hover:opacity-90 transition-opacity"
-                >
-                    <Plus className="w-4 h-4" />
-                    새 폴더
-                </button>
-            </div>
-
-            {/* 폴더 목록 */}
-            <div className="grid md:grid-cols-4 gap-4 mb-8">
-                {folders.map(folder => (
-                    <div
-                        key={folder.id}
-                        onClick={() => setSelectedFolder(folder.id)}
-                        className={`${showDarkMode ? 'bg-gray-900' : 'bg-white'} p-4 rounded-lg cursor-pointer hover:shadow-lg transition-shadow ${selectedFolder === folder.id ? 'ring-2 ring-vox-red' : ''
-                            }`}
-                    >
-                        <div className="flex items-start justify-between mb-3">
-                            <div className={`${folder.color} w-12 h-12 rounded-lg flex items-center justify-center`}>
-                                <Folder className="w-6 h-6 text-white" />
+        <div className={`w-full min-h-screen animate-fadeIn ${showDarkMode ? 'text-white' : 'text-black'}`}>
+            {/* Minimalist Profile Header (Hidden when board is selected for focused view) */}
+            <div className={`transition-all duration-700 overflow-hidden ${selectedBoardId ? 'h-0 opacity-0' : 'h-auto opacity-100 mb-20'}`}>
+                <div className="relative group mb-12">
+                    <div className="flex flex-col items-center justify-center gap-6">
+                        <div className="relative inline-block group/avatar">
+                            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white dark:border-gray-800 bg-gray-100 overflow-hidden mx-auto shadow-xl relative">
+                                <img
+                                    src={`https://ui-avatars.com/api/?name=${userProfile?.name || 'V'}&background=FF0000&color=fff&size=200`}
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).src = 'https://ui-avatars.com/api/?name=V&background=FF0000&color=fff&size=200';
+                                    }}
+                                    className="w-full h-full object-cover"
+                                    alt="Avatar"
+                                />
                             </div>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    deleteFolder(folder.id);
-                                }}
-                                className="p-1 hover:bg-gray-200 rounded transition-colors"
-                            >
-                                <Trash2 className="w-4 h-4 text-gray-400" />
-                            </button>
                         </div>
-                        <div className="font-medium mb-1">{folder.name}</div>
-                        <div className="text-sm text-gray-600">{folder.items.length} items</div>
+
+                        <div className="text-center max-w-xl mx-auto px-4">
+                            <h2 className="text-3xl font-serif font-bold mb-2">My Moodboards</h2>
+                            {isEditingBio ? (
+                                <div className="flex flex-col items-center gap-4">
+                                    <textarea
+                                        autoFocus
+                                        value={bioText}
+                                        onChange={(e) => setBioText(e.target.value)}
+                                        className={`w-full p-3 rounded-xl border border-vox-red bg-transparent text-center outline-none ${showDarkMode ? 'text-white' : 'text-black'} text-sm`}
+                                        rows={2}
+                                    />
+                                    <div className="flex gap-2">
+                                        <button onClick={handleUpdateBio} className="px-4 py-1 bg-vox-red text-white rounded-full text-xs font-bold uppercase">Save</button>
+                                        <button onClick={() => setIsEditingBio(false)} className="px-4 py-1 border border-gray-200 rounded-full text-xs font-bold uppercase">Cancel</button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <p
+                                    className="text-gray-500 text-sm cursor-pointer hover:text-vox-red transition-colors"
+                                    onClick={() => setIsEditingBio(true)}
+                                >
+                                    {userProfile?.description || bioText} <Edit3 className="w-3 h-3 inline opacity-50 ml-1" />
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="flex items-center justify-center gap-6 text-[10px] text-gray-400 font-black tracking-[0.2em] uppercase">
+                            <span className="flex flex-col gap-1 items-center">
+                                <span className="text-xl text-black dark:text-white font-serif">{bookmarks.length}</span>
+                                PINS
+                            </span>
+                            <div className="w-px h-8 bg-gray-200 dark:bg-gray-800"></div>
+                            <span className="flex flex-col gap-1 items-center">
+                                <span className="text-xl text-black dark:text-white font-serif">{boards.length + 1}</span>
+                                BOARDS
+                            </span>
+                        </div>
                     </div>
-                ))}
+                </div>
+
+                <div className="flex flex-col lg:flex-row items-center justify-between gap-6 pb-6 border-b border-gray-100 dark:border-gray-900">
+                    <div className="flex gap-8 overflow-x-auto no-scrollbar scroll-smooth">
+                        {['boards', 'pins', 'trash'].map((tab) => (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveTab(tab as any)}
+                                className={`text-[10px] font-black tracking-[0.3em] uppercase pb-2 transition-all relative whitespace-nowrap ${activeTab === tab ? 'text-vox-red border-b-2 border-vox-red' : 'text-gray-300 hover:text-black dark:hover:text-white'}`}
+                            >
+                                {tab}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="flex items-center gap-4 w-full lg:w-auto">
+                        <div className="relative flex-1 lg:w-64 group">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input
+                                type="text"
+                                placeholder="SEARCH..."
+                                value={pinSearchQuery}
+                                onChange={(e) => setPinSearchQuery(e.target.value)}
+                                className="w-full pl-10 pr-4 py-3 rounded-full bg-gray-50 dark:bg-gray-900 text-xs font-bold outline-none ring-1 ring-transparent focus:ring-vox-red transition-all"
+                            />
+                        </div>
+                        <button
+                            onClick={() => setIsCreateModalOpen(true)}
+                            className="bg-vox-red text-white p-3 rounded-full hover:scale-105 active:scale-95 transition-all shadow-lg"
+                        >
+                            <Plus className="w-5 h-5" />
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            {/* 선택된 폴더 내용 */}
-            {selectedFolder && (
-                <div className={`${showDarkMode ? 'bg-gray-900' : 'bg-white'} p-6 rounded-lg`}>
-                    <h3 className="text-xl font-serif mb-4">
-                        {folders.find(f => f.id === selectedFolder)?.name}
-                    </h3>
-                    <div className="grid md:grid-cols-3 gap-4">
-                        {folders.find(f => f.id === selectedFolder)?.items.map(item => (
-                            <div
-                                key={item.id}
-                                className={`${showDarkMode ? 'bg-black' : 'bg-gray-50'} p-4 rounded-lg`}
-                            >
-                                <div className="flex items-start justify-between mb-2">
-                                    <div className="flex-1">
-                                        <div className="font-medium mb-1">{item.keyword}</div>
-                                        <div className="text-sm text-gray-600">{item.category}</div>
+            {/* Content Area */}
+            <div className="py-8">
+                {activeTab === 'boards' ? (
+                    selectedBoardId ? (
+                        /* Board Detail View */
+                        <div className="animate-scaleIn">
+                            <div className="flex flex-col items-center mb-12 relative">
+                                <button
+                                    onClick={() => setSelectedBoardId(null)}
+                                    className={`absolute left-0 top-1 p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group`}
+                                >
+                                    <ArrowLeft className={`w-6 h-6 ${showDarkMode ? 'text-white' : 'text-black'} group-hover:-translate-x-1 transition-transform`} />
+                                </button>
+                                <h2 className={`text-5xl font-serif font-black mb-4 tracking-tight ${showDarkMode ? 'text-white' : 'text-black'}`}>{selectedBoardId === 'all-saved' ? 'All Saved Pins' : activeBoard?.name}</h2>
+                                <div className="flex items-center gap-4 text-sm text-gray-500 mb-8">
+                                    <span>{(selectedBoardId === 'all-saved' ? bookmarks : boardPins).length} Pins</span>
+                                    <div className="flex gap-2">
+                                        <button onClick={toggleLayout} className="p-2 hover:bg-gray-100 rounded-full dark:hover:bg-gray-800"><Layout className="w-4 h-4" /></button>
+                                        <button onClick={handleShareBoard} className="p-2 hover:bg-gray-100 rounded-full dark:hover:bg-gray-800"><Share2 className="w-4 h-4" /></button>
                                     </div>
-                                    <button
-                                        onClick={() => removeFromFolder(selectedFolder, item.id)}
-                                        className="p-1 hover:bg-gray-200 rounded transition-colors"
-                                    >
-                                        <Trash2 className="w-4 h-4 text-gray-400" />
-                                    </button>
+                                </div>
+                            </div>
+
+                            <div className={layoutMode === 'masonry'
+                                ? "columns-2 md:columns-3 lg:columns-4 gap-6 space-y-6"
+                                : "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+                            }>
+                                {(selectedBoardId === 'all-saved' ? bookmarks : boardPins).map((pin) => (
+                                    <div key={pin.id} className={`${layoutMode === 'masonry' ? 'break-inside-avoid' : ''} group relative mb-6`}>
+                                        <div className="relative rounded-[2rem] overflow-hidden bg-gray-100 dark:bg-gray-900 shadow-sm transition-all hover:-translate-y-1">
+                                            <img
+                                                src={pin.imageUrl}
+                                                onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1542272201-b1ca555f8505?w=500&q=80'; }}
+                                                className="w-full h-auto object-cover"
+                                                alt={pin.title}
+                                            />
+                                            <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                                <div className="flex gap-2 justify-end">
+                                                    <button
+                                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOrganizingPinId(organizingPinId === pin.id ? null : pin.id); }}
+                                                        className="p-2 bg-white text-black rounded-full hover:bg-vox-red hover:text-white transition-colors"
+                                                    >
+                                                        <Folder className="w-4 h-4" />
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleBookmark(pin); }}
+                                                        className="p-2 bg-white text-black rounded-full hover:bg-vox-red hover:text-white transition-colors"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            {organizingPinId === pin.id && (
+                                                <div className="absolute inset-0 bg-black/80 flex items-center justify-center p-4 z-20 animate-fadeIn">
+                                                    <div className="bg-white dark:bg-gray-900 w-full max-h-full rounded-xl overflow-hidden shadow-lg p-2">
+                                                        <div className="text-center font-bold text-xs mb-2 p-2">Select Board</div>
+                                                        <div className="flex flex-col gap-1 max-h-40 overflow-y-auto">
+                                                            {boards.map(board => (
+                                                                <button
+                                                                    key={board.id}
+                                                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleToggleItemInBoard(board.id, pin.id); }}
+                                                                    className={`text-left px-3 py-2 text-xs rounded-lg ${board.itemIds.includes(pin.id) ? 'bg-vox-red text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
+                                                                >
+                                                                    {board.name}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="mt-2 px-1">
+                                            <h4 className="font-bold text-sm truncate">{pin.title}</h4>
+                                            <p className="text-[10px] text-gray-500 uppercase">{pin.type}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            {(selectedBoardId === 'all-saved' ? bookmarks : boardPins).length === 0 && (
+                                <div className="text-center py-20 text-gray-500">
+                                    <p>No pins in this board yet.</p>
+                                    {selectedBoardId !== 'all-saved' && (
+                                        <button onClick={() => setIsAddingFromSaved(true)} className="mt-4 text-vox-red font-bold text-sm">Add from Saved Pins</button>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        /* Boards Grid */
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {/* All Saved */}
+                            <div className="group cursor-pointer" onClick={() => setSelectedBoardId('all-saved')}>
+                                <div className="aspect-[4/5] rounded-[2rem] overflow-hidden bg-gray-100 dark:bg-gray-900 relative mb-4">
+                                    <div className="grid grid-cols-2 grid-rows-2 h-full gap-0.5">
+                                        {[0, 1, 2, 3].map(i => (
+                                            <div key={i} className="bg-gray-200 dark:bg-gray-800 overflow-hidden">
+                                                {bookmarks[i] && <img src={bookmarks[i].imageUrl} className="w-full h-full object-cover" />}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
+                                </div>
+                                <h3 className="font-serif font-bold text-lg">All Saved Pins</h3>
+                                <p className="text-xs text-gray-500">{bookmarks.length} Pins</p>
+                            </div>
+
+                            {/* Custom Boards */}
+                            {boards.map(board => (
+                                <div key={board.id} className="group cursor-pointer" onClick={() => setSelectedBoardId(board.id)}>
+                                    <div className="aspect-[4/5] rounded-[2rem] overflow-hidden bg-gray-100 dark:bg-gray-900 relative mb-4">
+                                        {board.itemIds.length > 0 ? (
+                                            <div className="grid grid-cols-2 grid-rows-2 h-full gap-0.5">
+                                                {[0, 1, 2, 3].map(i => {
+                                                    const item = bookmarks.find(b => b.id === (board.itemIds[i % board.itemIds.length] || ''));
+                                                    return item ? <img key={i} src={item.imageUrl} className="w-full h-full object-cover" /> : <div key={i} className="bg-gray-200 dark:bg-gray-800" />
+                                                })}
+                                            </div>
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                                <Folder className="w-12 h-12" />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <h3 className="font-serif font-bold text-lg truncate">{board.name}</h3>
+                                    <p className="text-xs text-gray-500">{board.itemIds.length} Pins</p>
+                                </div>
+                            ))}
+
+                            {/* Create New */}
+                            <div
+                                onClick={() => setIsCreateModalOpen(true)}
+                                className="aspect-[4/5] rounded-[2rem] border-2 border-dashed border-gray-200 dark:border-gray-800 flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-vox-red hover:bg-vox-red/5 transition-colors"
+                            >
+                                <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400">
+                                    <Plus className="w-6 h-6" />
+                                </div>
+                                <span className="text-xs font-bold uppercase tracking-widest text-gray-400">New Board</span>
+                            </div>
+                        </div>
+                    )
+                ) : activeTab === 'pins' ? (
+                    <div className="columns-2 md:columns-3 lg:columns-4 gap-6 space-y-6">
+                        {filteredPins.map((pin) => (
+                            <div key={pin.id} className="break-inside-avoid rounded-[2rem] overflow-hidden bg-white dark:bg-gray-900 mb-6">
+                                <img src={pin.imageUrl} className="w-full h-auto" />
+                                <div className="p-4">
+                                    <h4 className="font-bold text-sm truncate">{pin.title}</h4>
+                                    <p className="text-xs text-gray-500">{pin.type}</p>
                                 </div>
                             </div>
                         ))}
-                        {folders.find(f => f.id === selectedFolder)?.items.length === 0 && (
-                            <div className="col-span-3 text-center py-8 text-gray-500">
-                                <ImageIcon className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                                <p>아직 저장된 트렌드가 없습니다</p>
-                                <p className="text-sm">북마크한 트렌드를 이 폴더에 추가해보세요</p>
-                            </div>
-                        )}
+                    </div>
+                ) : (
+                    <div className="text-center py-20">
+                        <h3 className="text-2xl font-serif text-gray-400">Trash</h3>
+                        {deletedItems.length > 0 && <p className="text-sm mt-2">{deletedItems.length} items</p>}
+                    </div>
+                )}
+            </div>
+
+            {/* Create Board Modal */}
+            {isCreateModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm animate-fadeIn">
+                    <div className={`${showDarkMode ? 'bg-gray-900 border-gray-800' : 'bg-white'} relative w-full max-w-md p-10 rounded-[2rem] shadow-2xl animate-scaleIn`}>
+                        <button onClick={() => setIsCreateModalOpen(false)} className="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full dark:hover:bg-gray-800">
+                            <X className="w-6 h-6" />
+                        </button>
+                        <h2 className="text-2xl font-serif font-black uppercase mb-8 text-center">New Board</h2>
+                        <form onSubmit={handleCreateBoard}>
+                            <input
+                                type="text"
+                                autoFocus
+                                value={newBoardName}
+                                onChange={(e) => setNewBoardName(e.target.value)}
+                                placeholder='Board Name'
+                                className="w-full bg-transparent border-b-2 border-gray-200 py-4 text-xl text-center outline-none focus:border-vox-red transition-all mb-8"
+                            />
+                            <button
+                                type="submit"
+                                className="w-full bg-vox-red text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-black transition-all"
+                            >
+                                Create
+                            </button>
+                        </form>
                     </div>
                 </div>
             )}
 
-            {/* 북마크된 트렌드 목록 */}
-            {bookmarkedTrends.length > 0 && (
-                <div className="mt-8">
-                    <h3 className="text-lg font-serif mb-4">북마크한 트렌드 ({bookmarkedTrends.length})</h3>
-                    <div className="space-y-2">
-                        {bookmarkedTrends.map(trendId => {
-                            const trend = allTrends[trendId];
-                            if (!trend) return null;
-
-                            return (
-                                <div
-                                    key={trendId}
-                                    className={`${showDarkMode ? 'bg-gray-900' : 'bg-white'} p-4 rounded-lg flex items-center justify-between`}
-                                >
-                                    <div>
-                                        <div className="font-medium">{trend.keyword}</div>
-                                        <div className="text-sm text-gray-600">{trend.category}</div>
-                                    </div>
-                                    <div className="flex gap-2">
-                                        {folders.map(folder => (
-                                            <button
-                                                key={folder.id}
-                                                onClick={() => addToFolder(folder.id, trendId)}
-                                                className={`${folder.color} text-white px-3 py-1 rounded text-sm hover:opacity-80 transition-opacity`}
-                                            >
-                                                {folder.name}에 추가
-                                            </button>
-                                        ))}
+            {/* Add From Saved Modal */}
+            {isAddingFromSaved && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
+                    <div className={`${showDarkMode ? 'bg-gray-900' : 'bg-white'} w-full max-w-2xl p-8 rounded-[2rem] h-[80vh] flex flex-col`}>
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-2xl font-serif">Add to {activeBoard?.name}</h2>
+                            <button onClick={() => setIsAddingFromSaved(false)}><X className="w-6 h-6" /></button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto grid grid-cols-2 md:grid-cols-3 gap-4">
+                            {pinsInEverythingButNotThisBoard.map(pin => (
+                                <div key={pin.id} className="cursor-pointer group relative" onClick={() => handleToggleItemInBoard(selectedBoardId!, pin.id)}>
+                                    <img src={pin.imageUrl} className="w-full aspect-[3/4] object-cover rounded-xl" />
+                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-xl">
+                                        <Plus className="w-8 h-8 text-white" />
                                     </div>
                                 </div>
-                            );
-                        })}
-                    </div>
-                </div>
-            )}
-
-            {/* 새 폴더 생성 모달 */}
-            {showNewFolderModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-                    <div className={`${showDarkMode ? 'bg-gray-900' : 'bg-white'} rounded-lg p-6 max-w-md w-full`}>
-                        <h3 className="text-xl font-serif mb-4">새 폴더 만들기</h3>
-                        <input
-                            type="text"
-                            value={newFolderName}
-                            onChange={(e) => setNewFolderName(e.target.value)}
-                            placeholder="폴더 이름을 입력하세요"
-                            className={`w-full px-4 py-2 border rounded-lg mb-4 ${showDarkMode ? 'bg-black border-gray-700' : 'border-gray-300'}`}
-                            onKeyPress={(e) => e.key === 'Enter' && createFolder()}
-                        />
-                        <div className="flex gap-2">
-                            <button
-                                onClick={createFolder}
-                                className="flex-1 py-2 bg-vox-red text-white rounded-lg hover:opacity-90 transition-opacity"
-                            >
-                                생성
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setShowNewFolderModal(false);
-                                    setNewFolderName('');
-                                }}
-                                className={`flex-1 py-2 border rounded-lg ${showDarkMode ? 'border-gray-700' : 'border-gray-300'}`}
-                            >
-                                취소
-                            </button>
+                            ))}
                         </div>
                     </div>
                 </div>

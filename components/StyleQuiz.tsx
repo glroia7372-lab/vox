@@ -129,7 +129,7 @@ export default function StyleQuiz() {
                         onClick={() => setQuizStep(quizStep - 1)}
                         className="self-start text-[10px] font-black tracking-[0.3em] text-gray-500 hover:text-vox-red transition-all uppercase mb-4"
                     >
-                        ← RETRACE INSIGHT
+                        ← 이전 단계로
                     </button>
                 )}
                 <div className="mt-auto opacity-20 text-[8px] font-black tracking-[0.5em] text-center uppercase">

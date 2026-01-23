@@ -2,64 +2,96 @@ export const styleQuiz = [
     {
         question: "당신이 추구하는 시각적 무드는?",
         options: [
-            { text: "Minimalist Architect", style: "Minimal / Clean / Form", image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=800&q=80" },
-            { text: "Neo-Romanticist", style: "Fluid / Poetic / Texture", image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80" },
-            { text: "Avant-Garde Explorer", style: "Bold / Experimental / Art", image: "https://images.unsplash.com/photo-1509631179647-b849389274e9?w=800&q=80" },
-            { text: "Modern Heritage", style: "Classic / Quality / Timeless", image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80" }
+            { text: "미니멀 & 모던", style: "심플함 / 정갈함 / 구조적", image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=800&q=80" },
+            { text: "로맨틱 & 감성", style: "우아함 / 시적인 무드 / 텍스처", image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80" },
+            { text: "아방가르드 & 유니크", style: "강렬함 / 독창성 / 예술적", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&q=80" },
+            { text: "클래식 & 럭셔리", style: "고전미 / 최상의 품질 / 타임리스", image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80" }
         ]
     },
     {
         question: "당신의 스타일이 가장 빛나야 할 순간은?",
         options: [
-            { text: "Daily High-End", detail: "일상의 격을 높이는 오피스 & 유니크 시나리오" },
-            { text: "Night Out / Artistic", detail: "영감을 주는 갤러리와 특별한 프라이빗 파티" },
-            { text: "Global Voyager", detail: "활동성과 스타일을 동시에 갖춘 글로벌 라이프스타일" },
-            { text: "Quiet Luxury", detail: "드러내지 않아도 느껴지는 고유한 우아함" }
+            { text: "품격 있는 데일리 룩", detail: "일상의 격을 높여주는 오피스 & 캐주얼 스타일" },
+            { text: "특별한 날을 위한 드레스업", detail: "전시회나 프라이빗 파티에서 돋보이는 스타일" },
+            { text: "활동적인 라이프스타일", detail: "편안하면서도 스타일리시한 트래블 & 비즈니스 룩" },
+            { text: "절제된 럭셔리 (올드머니)", detail: "로고 없이도 느껴지는 고급스러운 소재와 우아함" }
         ]
     },
     {
         question: "스타일링에서 가장 중요하게 생각하는 가치는?",
         options: [
-            { text: "The Silhouette", detail: "몸의 곡선을 완벽하게 조형하는 피팅의 미학" },
-            { text: "The Material", detail: "감각적인 텍스처와 최상급 소재의 퀄리티" },
-            { text: "The Story", detail: "브랜드의 역사와 디자이너의 독창적인 철학" },
-            { text: "The Innovation", detail: "신소재와 기술이 결합된 진보적인 패션" }
+            { text: "완벽한 핏과 실루엣", detail: "내 몸의 장점을 살려주는 조형적인 아름다움" },
+            { text: "소재와 퀄리티", detail: "피부에 닿는 촉감과 옷의 본질적인 가치" },
+            { text: "디자이너의 철학", detail: "브랜드가 가진 고유한 역사와 스토리텔링" },
+            { text: "새로운 스타일 도전", detail: "남들과 다른 독창적인 디자인과 과감한 시도" }
         ]
     }
 ];
 
 export const realtimeTrends = [
     {
-        keyword: "#QuietLuxury",
-        mentions: 12847,
-        growth: "+245%",
-        category: "Style",
-        time: "1시간 전",
-        city: "Paris"
-    },
-    {
-        keyword: "#VarsitiJacket",
-        mentions: 8932,
-        growth: "+189%",
-        category: "Item",
-        time: "2시간 전",
+        keyword: "#HyperTexture",
+        mentions: 15420,
+        growth: "+312%",
+        category: "Material",
+        time: "12분 전",
         city: "Seoul"
     },
     {
-        keyword: "#Y2K",
-        mentions: 7651,
-        growth: "+156%",
+        keyword: "#CyberPrep",
+        mentions: 12150,
+        growth: "+189%",
         category: "Style",
-        time: "3시간 전",
+        time: "18분 전",
+        city: "Tokyo"
+    },
+    {
+        keyword: "#BioLeather",
+        mentions: 9840,
+        growth: "+156%",
+        category: "Sustainability",
+        time: "32분 전",
+        city: "Copenhagen"
+    },
+    {
+        keyword: "#NeoVintageDenim",
+        mentions: 8760,
+        growth: "+142%",
+        category: "Item",
+        time: "45분 전",
+        city: "Paris"
+    },
+    {
+        keyword: "#MetaMetallic",
+        mentions: 7650,
+        growth: "+128%",
+        category: "Color",
+        time: "1시간 전",
         city: "New York"
     },
     {
-        keyword: "#MaryJaneShoes",
-        mentions: 6234,
-        growth: "+134%",
-        category: "Item",
-        time: "4시간 전",
-        city: "Tokyo"
+        keyword: "#DigitalBaroque",
+        mentions: 6540,
+        growth: "+115%",
+        category: "Pattern",
+        time: "1시간 전",
+        city: "Milan"
+    },
+    {
+        keyword: "#UtilityGorpcore",
+        mentions: 5430,
+        growth: "+98%",
+        category: "Outdoor",
+        time: "2시간 전",
+        city: "Berlin"
+    },
+    {
+        keyword: "#BalletCoreRedux",
+        mentions: 4320,
+        growth: "+87%",
+        category: "Style",
+        time: "2시간 전",
+        city: "London"
     }
 ];
 

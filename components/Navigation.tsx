@@ -133,7 +133,7 @@ export default function Navigation() {
             {menuOpen && (
                 <>
                     <div className="fixed inset-0 bg-black/50 z-50" onClick={() => setMenuOpen(false)} />
-                    <div className={`fixed top-0 right-0 h-full w-[100%] md:w-[400px] max-w-full ${showDarkMode ? 'bg-black text-white' : 'bg-white text-black'} z-50 p-8 md:p-12 flex flex-col shadow-2xl transition-transform duration-300 animate-slideLeft`}>
+                    <div className={`fixed top-0 right-0 h-full w-[100%] md:w-[400px] max-w-full ${showDarkMode ? 'bg-black text-white' : 'bg-white text-black'} z-50 p-8 md:p-12 flex flex-col shadow-2xl transition-transform duration-300 animate-slideLeft overflow-y-auto pb-20`}>
                         <div className="flex justify-between items-center mb-16">
                             <span className="text-2xl font-serif">MENU</span>
                             <button onClick={() => setMenuOpen(false)}>
@@ -197,13 +197,14 @@ export default function Navigation() {
                                 {showDarkMode ? 'LIGHT MODE' : 'DARK MODE'}
                             </button>
 
-                            {/* DEV: 구독자 상태 토글 (개발용) */}
+                            {/* DEV: 구독자 상태 토글 (개발용 - 필요시 주석 해제하여 사용)
                             <button
                                 onClick={() => setIsSubscriber(!isSubscriber)}
                                 className="flex items-center gap-2 text-xs font-bold tracking-widest hover:opacity-60 text-gray-500"
                             >
                                 [DEV] {isSubscriber ? 'SUB ON' : 'SUB OFF'}
-                            </button>
+                            </button> 
+                            */}
                         </div>
                     </div>
                 </>

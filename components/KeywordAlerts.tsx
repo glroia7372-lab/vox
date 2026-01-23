@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Bell, Plus, Trash2, Check, AlertCircle } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
-interface KeywordAlert {
+export interface KeywordAlert {
     id: string;
     keyword: string;
     enabled: boolean;
@@ -12,40 +12,23 @@ interface KeywordAlert {
     lastMatched?: string;
 }
 
-export default function KeywordAlerts() {
+interface KeywordAlertsProps {
+    keywords: KeywordAlert[];
+    onAdd: (keyword: string) => void;
+    onToggle: (id: string) => void;
+    onDelete: (id: string) => void;
+}
+
+export default function KeywordAlerts({ keywords = [], onAdd, onToggle, onDelete }: KeywordAlertsProps) {
     const { showDarkMode } = useApp();
-    const [keywords, setKeywords] = useState<KeywordAlert[]>([
-        { id: '1', keyword: '샤넬', enabled: true, matchCount: 3, lastMatched: '2시간 전' },
-        { id: '2', keyword: '데님', enabled: true, matchCount: 7, lastMatched: '30분 전' },
-    ]);
     const [newKeyword, setNewKeyword] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
 
-    const addKeyword = () => {
+    const handleAdd = () => {
         if (!newKeyword.trim()) return;
-
-        const newAlert: KeywordAlert = {
-            id: Date.now().toString(),
-            keyword: newKeyword.trim(),
-            enabled: true,
-            matchCount: 0,
-        };
-
-        setKeywords([...keywords, newAlert]);
+        onAdd(newKeyword.trim());
         setNewKeyword('');
         setShowAddModal(false);
-    };
-
-    const toggleKeyword = (id: string) => {
-        setKeywords(keywords.map(k =>
-            k.id === id ? { ...k, enabled: !k.enabled } : k
-        ));
-    };
-
-    const deleteKeyword = (id: string) => {
-        if (confirm('이 키워드 알림을 삭제하시겠습니까?')) {
-            setKeywords(keywords.filter(k => k.id !== id));
-        }
     };
 
     return (
@@ -91,7 +74,7 @@ export default function KeywordAlerts() {
                         >
                             <div className="flex items-center gap-4 flex-1">
                                 <button
-                                    onClick={() => toggleKeyword(keyword.id)}
+                                    onClick={() => onToggle(keyword.id)}
                                     className={`w-12 h-6 rounded-full transition-colors relative ${keyword.enabled ? 'bg-vox-red' : 'bg-gray-300'
                                         }`}
                                 >
@@ -122,7 +105,11 @@ export default function KeywordAlerts() {
                                 </div>
                             </div>
                             <button
-                                onClick={() => deleteKeyword(keyword.id)}
+                                onClick={() => {
+                                    if (confirm('이 키워드 알림을 삭제하시겠습니까?')) {
+                                        onDelete(keyword.id);
+                                    }
+                                }}
                                 className="p-2 hover:bg-gray-200 rounded transition-colors"
                             >
                                 <Trash2 className="w-4 h-4 text-gray-400" />
@@ -185,11 +172,11 @@ export default function KeywordAlerts() {
                             placeholder="예: 샤넬, 데님, 미니멀"
                             className={`w-full px-4 py-2 border rounded-lg mb-4 ${showDarkMode ? 'bg-black border-gray-700' : 'border-gray-300'
                                 }`}
-                            onKeyPress={(e) => e.key === 'Enter' && addKeyword()}
+                            onKeyPress={(e) => e.key === 'Enter' && handleAdd()}
                         />
                         <div className="flex gap-2">
                             <button
-                                onClick={addKeyword}
+                                onClick={handleAdd}
                                 className="flex-1 py-2 bg-vox-red text-white rounded-lg hover:opacity-90 transition-opacity"
                             >
                                 추가
