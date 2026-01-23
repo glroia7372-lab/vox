@@ -19,7 +19,11 @@ import {
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
-export default function MoodBoard() {
+interface MoodBoardProps {
+    initialBoardId?: string | null;
+}
+
+export default function MoodBoard({ initialBoardId }: MoodBoardProps) {
     const router = useRouter();
     const {
         userProfile,
@@ -36,7 +40,7 @@ export default function MoodBoard() {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [newBoardName, setNewBoardName] = useState('');
     const [activeTab, setActiveTab] = useState<'boards' | 'pins' | 'trash'>('boards');
-    const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
+    const [selectedBoardId, setSelectedBoardId] = useState<string | null>(initialBoardId || null);
     const [pinSearchQuery, setPinSearchQuery] = useState('');
     const [isEditingBio, setIsEditingBio] = useState(false);
     const [bioText, setBioText] = useState(userProfile?.description || 'VOX가 정제한 당신만의 고유한 패션 미학 아카이브.');

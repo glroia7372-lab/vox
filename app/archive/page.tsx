@@ -385,7 +385,7 @@ export default function ArchivePage() {
 
                 {/* 무드보드 탭 (구독자 전용) */}
                 {activeTab === 'moodboard' && (
-                    <MoodBoard />
+                    <MoodBoard initialBoardId={searchParams.get('board')} />
                 )}
 
                 {/* 키워드 알림 탭 (구독자 전용) */}

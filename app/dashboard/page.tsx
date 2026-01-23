@@ -13,7 +13,11 @@ import {
     LogOut,
     ArrowUpRight,
     Bell,
-    User
+    User,
+    X,
+    Check,
+    Zap,
+    Plus
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import Link from 'next/link';
@@ -27,8 +31,7 @@ export default function DashboardPage() {
         showDarkMode,
         bookmarks,
         boards,
-        updateUserProfile,
-        alertKeywords // 가정한 Context 데이터 (없다면 더미로 처리하거나 추가 필요, 앞서 추가했음)
+        updateUserProfile
     } = useApp();
 
     const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
@@ -160,7 +163,10 @@ export default function DashboardPage() {
                                 </div>
                                 <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Active</span>
                             </div>
-                            <button className="w-full py-3 text-left text-xs font-bold text-gray-400 hover:text-vox-red transition-colors flex items-center justify-between group">
+                            <button
+                                onClick={() => alert('구독 관리 페이지는 준비 중입니다.\n(실제 서비스에서는 결제 관리 페이지로 이동합니다)')}
+                                className="w-full py-3 text-left text-xs font-bold text-gray-400 hover:text-vox-red transition-colors flex items-center justify-between group"
+                            >
                                 Manage Subscription <ArrowUpRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                             </button>
                         </div>
@@ -170,7 +176,7 @@ export default function DashboardPage() {
                     <div className="lg:col-span-8 space-y-8">
                         {/* Stats Grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div className={`p-6 rounded-[2rem] ${showDarkMode ? 'bg-gray-900' : 'bg-white'} shadow-sm flex flex-col justify-between h-40`}>
+                            <Link href="/archive?tab=moodboard&board=all-saved" className={`p-6 rounded-[2rem] ${showDarkMode ? 'bg-gray-900' : 'bg-white'} shadow-sm flex flex-col justify-between h-40 hover:scale-105 transition-transform cursor-pointer`}>
                                 <div className="flex justify-between items-start">
                                     <Bookmark className="w-6 h-6 text-vox-red" />
                                     <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Pins</span>
@@ -179,8 +185,8 @@ export default function DashboardPage() {
                                     <span className="text-4xl font-serif font-black">{totalPins}</span>
                                     <p className="text-xs text-gray-500 mt-1">Items in archive</p>
                                 </div>
-                            </div>
-                            <div className={`p-6 rounded-[2rem] ${showDarkMode ? 'bg-gray-900' : 'bg-white'} shadow-sm flex flex-col justify-between h-40`}>
+                            </Link>
+                            <Link href="/archive?tab=moodboard" className={`p-6 rounded-[2rem] ${showDarkMode ? 'bg-gray-900' : 'bg-white'} shadow-sm flex flex-col justify-between h-40 hover:scale-105 transition-transform cursor-pointer`}>
                                 <div className="flex justify-between items-start">
                                     <Layout className="w-6 h-6 text-blue-500" />
                                     <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Moodboards</span>
@@ -189,8 +195,8 @@ export default function DashboardPage() {
                                     <span className="text-4xl font-serif font-black">{totalBoards}</span>
                                     <p className="text-xs text-gray-500 mt-1">Curated themes</p>
                                 </div>
-                            </div>
-                            <div className={`p-6 rounded-[2rem] ${showDarkMode ? 'bg-gray-900' : 'bg-white'} shadow-sm flex flex-col justify-between h-40`}>
+                            </Link>
+                            <Link href="/archive?tab=alerts" className={`p-6 rounded-[2rem] ${showDarkMode ? 'bg-gray-900' : 'bg-white'} shadow-sm flex flex-col justify-between h-40 hover:scale-105 transition-transform cursor-pointer`}>
                                 <div className="flex justify-between items-start">
                                     <Bell className="w-6 h-6 text-purple-500" />
                                     <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Alerts</span>
@@ -199,7 +205,7 @@ export default function DashboardPage() {
                                     <span className="text-4xl font-serif font-black">2</span>
                                     <p className="text-xs text-gray-500 mt-1">Active keywords</p>
                                 </div>
-                            </div>
+                            </Link>
                         </div>
 
                         {/* Recent Boards */}
@@ -264,13 +270,18 @@ export default function DashboardPage() {
                             {recentPins.length > 0 ? (
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     {recentPins.map(pin => (
-                                        <div key={pin.id} className="group cursor-pointer">
+                                        <a href={pin.url} key={pin.id} className="group cursor-pointer block">
                                             <div className="aspect-square rounded-2xl bg-gray-100 dark:bg-gray-800 overflow-hidden mb-2 relative">
                                                 <img src={pin.imageUrl} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
+                                                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <div className="bg-white/90 backdrop-blur rounded-full p-1.5 shadow-sm">
+                                                        <ArrowUpRight className="w-3 h-3 text-black" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <p className="text-xs font-bold truncate">{pin.title}</p>
-                                        </div>
+                                            <p className="text-xs font-bold truncate group-hover:text-vox-red transition-colors">{pin.title}</p>
+                                        </a>
                                     ))}
                                 </div>
                             ) : (
