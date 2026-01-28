@@ -9,6 +9,7 @@ import TrendReport from '@/components/TrendReport';
 import MoodBoard from '@/components/MoodBoard';
 import KeywordAlerts, { KeywordAlert } from '@/components/KeywordAlerts';
 import { supabase } from '@/utils/supabase/client';
+import { registerServiceWorker, subscribeToPush } from '@/lib/pushNotification';
 
 export default function ArchivePage() {
     const router = useRouter();
@@ -23,6 +24,27 @@ export default function ArchivePage() {
         { id: '1', keyword: '샤넬', enabled: true, matchCount: 3, lastMatched: '2시간 전' },
         { id: '2', keyword: '데님', enabled: true, matchCount: 7, lastMatched: '30분 전' }
     ]);
+    const [pushSubscription, setPushSubscription] = useState<PushSubscription | null>(null);
+
+    // Function to trigger push via API
+    const triggerPushNotification = async (title: string, body: string, url: string) => {
+        if (!pushSubscription) return;
+
+        try {
+            await fetch('/api/push', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    subscription: pushSubscription,
+                    title,
+                    body,
+                    url
+                })
+            });
+        } catch (error) {
+            console.error('Failed to send push notification:', error);
+        }
+    };
 
     useEffect(() => {
         // Initial Fetch
@@ -51,14 +73,16 @@ export default function ArchivePage() {
                 // Check for Keyword Alerts
                 setAlertKeywords(prev => prev.map(k => {
                     if (k.enabled && k.keyword === updatedTrend.keyword) {
-                        // Trigger Browser Notification (Toast simulation)
-                        const alertMsg = `키워드 알림: '${k.keyword}' 트렌드가 업데이트 되었습니다!`;
+                        const alertMsg = `'${k.keyword}' 트렌드가 업데이트 되었습니다!`;
+
+                        // 1. Browser Notification (Current Session)
                         if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
                             new Notification('VOX Trend Alert', { body: alertMsg });
-                        } else {
-                            // Fallback to simple alert or console for MVP
-                            console.log(alertMsg);
                         }
+
+                        // 2. Web Push Notification (Background/Mobile)
+                        triggerPushNotification('VOX Trend Alert', alertMsg, `/archive?trend=${k.keyword}`);
+
                         return { ...k, matchCount: k.matchCount + 1, lastMatched: '방금 전' };
                     }
                     return k;
@@ -66,10 +90,20 @@ export default function ArchivePage() {
             })
             .subscribe();
 
-        // Request Notification Permission
-        if (typeof Notification !== 'undefined' && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-            Notification.requestPermission();
-        }
+        // Request Notification Permission and Set up Push
+        const setupPush = async () => {
+            if (typeof Notification !== 'undefined') {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    const registration = await registerServiceWorker();
+                    if (registration) {
+                        const subscription = await subscribeToPush(registration);
+                        if (subscription) setPushSubscription(subscription);
+                    }
+                }
+            }
+        };
+        setupPush();
 
         return () => { supabase.removeChannel(channel); };
     }, []);
