@@ -55,18 +55,7 @@ export default function LoginPage() {
         }
     };
 
-    const handleNaverLogin = () => {
-        const clientId = process.env.NEXT_PUBLIC_NAVER_CLIENT_ID;
-        const redirectUri = encodeURIComponent(`${window.location.origin}/auth/callback`);
-        const state = Math.random().toString(36).substring(7);
 
-        // Save state to verify later if needed
-        localStorage.setItem('naver_auth_state', state);
-
-        const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}`;
-
-        window.location.href = naverAuthUrl;
-    };
 
 
 
@@ -182,22 +171,13 @@ export default function LoginPage() {
                     {/* Social Login */}
                     <div className="pt-8 border-t border-gray-100">
                         <p className="text-center text-xs text-gray-400 mb-6 uppercase tracking-widest">Or continue with</p>
-                        <div className="grid grid-cols-2 gap-4">
-                            <button
-                                onClick={handleNaverLogin}
-                                disabled={isLoading}
-                                className="flex items-center justify-center gap-3 py-3 border border-gray-200 hover:border-black transition-colors bg-[#03C75A] text-white border-none"
-                            >
-                                <span className="font-serif">Naver</span>
-                            </button>
-                            <button
-                                onClick={handleKakaoLogin}
-                                disabled={isLoading}
-                                className="flex items-center justify-center gap-3 py-3 border border-gray-200 hover:border-black transition-colors bg-[#FEE500] text-black border-none"
-                            >
-                                <span className="font-serif">Kakao</span>
-                            </button>
-                        </div>
+                        <button
+                            onClick={handleKakaoLogin}
+                            disabled={isLoading}
+                            className="w-full flex items-center justify-center gap-3 py-4 border border-gray-200 hover:opacity-90 transition-all bg-[#FEE500] text-black border-none rounded-sm"
+                        >
+                            <span className="font-serif">Kakao</span>
+                        </button>
                     </div>
                 </div>
             </div>
