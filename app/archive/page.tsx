@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Zap, TrendingUp, Clock, MapPin, Bookmark, Heart, Mail, Lock } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
@@ -11,7 +11,7 @@ import KeywordAlerts, { KeywordAlert } from '@/components/KeywordAlerts';
 import { supabase } from '@/utils/supabase/client';
 import { registerServiceWorker, subscribeToPush } from '@/lib/pushNotification';
 
-export default function ArchivePage() {
+function ArchiveContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { showDarkMode, isSubscriber, setIsSubscriber, setShowSubscribeModal, toggleBookmark: toggleGlobalBookmark, bookmarks: globalBookmarks } = useApp();
@@ -440,5 +440,17 @@ export default function ArchivePage() {
                 )}
             </div>
         </div>
+    );
+}
+
+export default function ArchivePage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-vox-red"></div>
+            </div>
+        }>
+            <ArchiveContent />
+        </Suspense>
     );
 }
