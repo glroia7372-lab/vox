@@ -40,25 +40,31 @@ export default function StyleQuiz() {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/95 backdrop-blur-3xl z-[100] flex items-center justify-center p-6 animate-fadeIn">
-            <div className={`relative w-full max-w-6xl p-8 md:p-16 rounded-[3rem] shadow-2xl border flex flex-col max-h-[90vh] overflow-hidden ${showDarkMode ? 'bg-black border-white/10' : 'bg-white border-black/5'}`}>
-
+        <div
+            className="fixed inset-0 bg-black/95 backdrop-blur-3xl z-[100] flex items-center justify-center p-4 sm:p-6 animate-fadeIn"
+            onClick={() => setShowStyleQuiz(false)}
+        >
+            <div
+                className={`relative w-full max-w-6xl p-6 sm:p-12 md:p-16 rounded-[2rem] sm:rounded-[3rem] shadow-2xl border flex flex-col max-h-[90vh] overflow-hidden ${showDarkMode ? 'bg-black border-white/10' : 'bg-white border-black/5'}`}
+                onClick={(e) => e.stopPropagation()}
+            >
                 {/* Close Button */}
                 <button
                     onClick={() => setShowStyleQuiz(false)}
-                    className="absolute top-8 right-8 p-3 hover:bg-vox-red/10 rounded-full transition-all group z-10"
+                    className="absolute top-4 right-4 sm:top-8 sm:right-8 p-2 sm:p-3 hover:bg-vox-red/10 rounded-full transition-all group z-50 focus:outline-none"
+                    aria-label="Close Quiz"
                 >
-                    <X className={`w-8 h-8 group-hover:rotate-90 transition-transform ${showDarkMode ? 'text-white' : 'text-black'}`} />
+                    <X className={`w-6 h-6 sm:w-8 sm:h-8 group-hover:rotate-90 transition-transform ${showDarkMode ? 'text-white' : 'text-black'}`} />
                 </button>
 
                 {/* Progress Bar */}
-                <div className="mb-12 relative z-10">
+                <div className="mb-6 sm:mb-12 relative z-10">
                     <div className="flex items-center justify-between mb-4">
-                        <span className="text-[10px] font-black tracking-[0.4em] text-gray-400 uppercase">
+                        <span className="text-[8px] sm:text-[10px] font-black tracking-[0.2em] sm:tracking-[0.4em] text-gray-400 uppercase">
                             Step {quizStep + 1} of {styleQuiz.length}
                         </span>
                         <div className="text-right">
-                            <h2 className="text-2xl font-serif italic text-vox-red">Style DNA Scan</h2>
+                            <h2 className="text-lg sm:text-2xl font-serif italic text-vox-red">Style DNA Scan</h2>
                         </div>
                     </div>
                     <div className={`w-full h-1 ${showDarkMode ? 'bg-white/5' : 'bg-gray-100'} rounded-full overflow-hidden`}>
@@ -69,24 +75,24 @@ export default function StyleQuiz() {
                     </div>
                 </div>
 
-                {/* Question */}
-                <div className="flex-1 overflow-y-auto mb-8 px-2 custom-scrollbar relative z-10">
-                    <h3 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif mb-8 md:mb-12 leading-[1.1] tracking-tighter ${showDarkMode ? 'text-white' : 'text-black'}`}>
+                {/* Question Area */}
+                <div className="flex-1 overflow-y-auto mb-4 sm:mb-8 px-1 sm:px-2 custom-scrollbar relative z-10">
+                    <h3 className={`text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-serif mb-6 sm:mb-12 leading-[1.2] tracking-tighter ${showDarkMode ? 'text-white' : 'text-black'}`}>
                         {styleQuiz[quizStep].question}
                     </h3>
 
-                    <div className={`grid ${(styleQuiz[quizStep].options[0] as any).image ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-2'} gap-6`}>
+                    <div className={`grid grid-cols-1 ${(styleQuiz[quizStep].options[0] as any).image ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-2'} gap-4 sm:gap-6`}>
                         {styleQuiz[quizStep].options.map((option: any, idx) => (
                             <button
                                 key={idx}
                                 onClick={() => handleAnswer(option)}
-                                className={`relative group overflow-hidden rounded-3xl border-2 transition-all duration-500 text-left flex flex-col h-full ${showDarkMode
+                                className={`relative group overflow-hidden rounded-2xl sm:rounded-3xl border-2 transition-all duration-500 text-left flex flex-col h-full ${showDarkMode
                                     ? 'border-white/5 hover:border-vox-red bg-white/5'
                                     : 'border-black/5 hover:border-vox-red bg-gray-50'
-                                    } hover:-translate-y-2 shadow-xl hover:shadow-vox-red/10`}
+                                    } hover:shadow-2xl hover:shadow-vox-red/10 focus:outline-none focus:border-vox-red`}
                             >
                                 {option.image && (
-                                    <div className="h-64 sm:h-80 overflow-hidden relative">
+                                    <div className="h-32 sm:h-56 md:h-80 overflow-hidden relative">
                                         <img
                                             src={option.image}
                                             alt={option.text}
@@ -98,23 +104,23 @@ export default function StyleQuiz() {
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-20 transition-opacity" />
                                     </div>
                                 )}
-                                <div className="p-8 flex flex-col flex-1 justify-between">
+                                <div className="p-4 sm:p-8 flex flex-col flex-1 justify-between">
                                     <div>
-                                        <p className={`text-xl font-bold mb-3 uppercase tracking-tight ${showDarkMode ? 'text-white' : 'text-black'}`}>{option.text}</p>
+                                        <p className={`text-base sm:text-xl font-bold mb-1 sm:mb-3 uppercase tracking-tight ${showDarkMode ? 'text-white' : 'text-black'}`}>{option.text}</p>
                                         {option.style && (
-                                            <p className="text-[10px] font-black tracking-widest text-vox-red uppercase mb-4 opacity-80">
+                                            <p className="text-[10px] font-black tracking-widest text-vox-red uppercase mb-2 sm:mb-4 opacity-80">
                                                 {option.style}
                                             </p>
                                         )}
                                         {option.detail && (
-                                            <p className="text-sm opacity-60 leading-relaxed font-light mb-4 italic">
+                                            <p className="text-xs sm:text-sm opacity-60 leading-relaxed font-light mb-4 italic line-clamp-2">
                                                 {option.detail}
                                             </p>
                                         )}
                                     </div>
-                                    <div className="flex justify-end">
-                                        <div className="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center group-hover:bg-vox-red group-hover:border-vox-red transition-all group-hover:scale-110">
-                                            <div className="w-2 h-2 bg-gray-400 group-hover:bg-white rounded-full" />
+                                    <div className="flex justify-end mt-2">
+                                        <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-gray-400 flex items-center justify-center group-hover:bg-vox-red group-hover:border-vox-red transition-all group-hover:scale-110">
+                                            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-400 group-hover:bg-white rounded-full" />
                                         </div>
                                     </div>
                                 </div>
@@ -124,16 +130,18 @@ export default function StyleQuiz() {
                 </div>
 
                 {/* Footer Insight */}
-                {quizStep > 0 && (
-                    <button
-                        onClick={() => setQuizStep(quizStep - 1)}
-                        className="self-start text-[10px] font-black tracking-[0.3em] text-gray-500 hover:text-vox-red transition-all uppercase mb-4"
-                    >
-                        ← 이전 단계로
-                    </button>
-                )}
-                <div className="mt-auto opacity-20 text-[8px] font-black tracking-[0.5em] text-center uppercase">
-                    VOX BIOMETRIC STYLE ANALYSIS ENGINE V2.0
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-auto">
+                    {quizStep > 0 && (
+                        <button
+                            onClick={() => setQuizStep(quizStep - 1)}
+                            className="text-[10px] font-black tracking-[0.3em] text-gray-500 hover:text-vox-red transition-all uppercase"
+                        >
+                            ← 이전 단계로
+                        </button>
+                    )}
+                    <div className="opacity-20 text-[8px] font-black tracking-[0.5em] text-center uppercase">
+                        VOX BIOMETRIC STYLE ANALYSIS ENGINE V2.0
+                    </div>
                 </div>
             </div>
         </div>
