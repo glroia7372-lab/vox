@@ -50,21 +50,24 @@ export default function StyleQuiz() {
             >
                 {/* Close Button */}
                 <button
-                    onClick={() => setShowStyleQuiz(false)}
-                    className="absolute top-4 right-4 sm:top-8 sm:right-8 p-2 sm:p-3 hover:bg-vox-red/10 rounded-full transition-all group z-50 focus:outline-none"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setShowStyleQuiz(false);
+                    }}
+                    className="absolute top-4 right-4 sm:top-8 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-gray-100/80 dark:bg-white/10 backdrop-blur-md hover:bg-vox-red hover:text-white rounded-full transition-all group z-[110] focus:outline-none shadow-lg"
                     aria-label="Close Quiz"
                 >
-                    <X className={`w-6 h-6 sm:w-8 sm:h-8 group-hover:rotate-90 transition-transform ${showDarkMode ? 'text-white' : 'text-black'}`} />
+                    <X className={`w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-90 transition-transform ${showDarkMode ? 'text-white' : 'text-black'} group-hover:text-white`} />
                 </button>
 
-                {/* Progress Bar */}
+                {/* Progress Bar & Header */}
                 <div className="mb-6 sm:mb-12 relative z-10">
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-between mb-4 pr-12 sm:pr-0">
                         <span className="text-[8px] sm:text-[10px] font-black tracking-[0.2em] sm:tracking-[0.4em] text-gray-400 uppercase">
                             Step {quizStep + 1} of {styleQuiz.length}
                         </span>
                         <div className="text-right">
-                            <h2 className="text-lg sm:text-2xl font-serif italic text-vox-red">Style DNA Scan</h2>
+                            <h2 className="text-lg sm:text-2xl font-serif italic text-vox-red leading-tight">Style DNA Scan</h2>
                         </div>
                     </div>
                     <div className={`w-full h-1 ${showDarkMode ? 'bg-white/5' : 'bg-gray-100'} rounded-full overflow-hidden`}>
