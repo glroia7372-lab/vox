@@ -80,9 +80,17 @@ export async function fetchBeautyProducts(
 
         const data: MakeupProduct[] = await response.json();
 
-        // Filter out products without images and limit results
+        // Filter out products without images, missing prices, or zero prices
         return data
-            .filter(product => product.image_link && product.image_link.trim() !== '')
+            .filter(product =>
+                product.image_link &&
+                product.image_link.trim() !== '' &&
+                product.price &&
+                product.price !== '0.0' &&
+                product.price !== '0' &&
+                product.name &&
+                product.brand
+            )
             .slice(0, limit);
     } catch (error) {
         console.error('Error fetching beauty products:', error);
@@ -92,11 +100,23 @@ export async function fetchBeautyProducts(
 
 export async function searchBeautyProducts(query: string): Promise<MakeupProduct[]> {
     try {
-        // Search by product name or brand
-        const allProducts = await fetchBeautyProducts();
-        return allProducts.filter(product =>
-            product.name.toLowerCase().includes(query.toLowerCase()) ||
-            product.brand.toLowerCase().includes(query.toLowerCase())
+        const lowerQuery = query.toLowerCase().trim();
+
+        // 1. If searching for a specific brand we know, use the brand filter for exact results
+        const matchedBrand = beautyBrands.find(brand => lowerQuery.includes(brand.toLowerCase()));
+
+        if (matchedBrand) {
+            return await fetchBeautyProducts(undefined, matchedBrand, 100);
+        }
+
+        // 2. Otherwise, fetch a larger pool of products (200+) to search through locally
+        // This provides much better results than searching within only 80 items
+        const rawResults = await fetchBeautyProducts(undefined, undefined, 300);
+
+        return rawResults.filter(product =>
+            product.name.toLowerCase().includes(lowerQuery) ||
+            (product.brand && product.brand.toLowerCase().includes(lowerQuery)) ||
+            (product.product_type && product.product_type.toLowerCase().includes(lowerQuery))
         );
     } catch (error) {
         console.error('Error searching beauty products:', error);

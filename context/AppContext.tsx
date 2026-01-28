@@ -51,6 +51,7 @@ interface AppContextType {
     createBoard: (name: string, description?: string) => void;
     deleteBoard: (boardId: string) => void;
     toggleItemInBoard: (boardId: string, itemId: string) => void;
+    updateBoard: (boardId: string, updates: Partial<Board>) => void;
     updateUserProfile: (updates: Partial<UserProfile>) => void;
 }
 
@@ -260,6 +261,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         });
     };
 
+    const updateBoard = (boardId: string, updates: Partial<Board>) => {
+        setBoards(prev => {
+            const newBoards = prev.map(board =>
+                board.id === boardId ? { ...board, ...updates } : board
+            );
+            localStorage.setItem('vox_boards', JSON.stringify(newBoards));
+            return newBoards;
+        });
+    };
+
     const value = {
         isSubscriber,
         setIsSubscriber: saveSubscriberStatus,
@@ -286,6 +297,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         createBoard,
         deleteBoard,
         toggleItemInBoard,
+        updateBoard,
         updateUserProfile
     };
 

@@ -1,11 +1,13 @@
+import { Suspense } from 'react';
 import { fetchBeautyProducts, getFeaturedProducts } from '@/lib/beautyApi';
 import BeautyClient from './BeautyClient';
+import BeautySkeleton from './BeautySkeleton';
 
-export default async function BeautyPage() {
-    // Initial fetch on server to eliminate client-side loading wait
-    // We fetch a standard set of products and featured items
+// Separate component to handle the async data fetching
+async function BeautyContent() {
+    // Reduced limit for faster initial server-side fetch
     const [initialProducts, initialFeatured] = await Promise.all([
-        fetchBeautyProducts(),
+        fetchBeautyProducts(undefined, undefined, 24),
         getFeaturedProducts()
     ]);
 
@@ -14,5 +16,14 @@ export default async function BeautyPage() {
             initialProducts={initialProducts}
             initialFeatured={initialFeatured}
         />
+    );
+}
+
+export default function BeautyPage() {
+    return (
+        // Now navigation will happen immediately, showing the Skeleton first
+        <Suspense fallback={<BeautySkeleton />}>
+            <BeautyContent />
+        </Suspense>
     );
 }

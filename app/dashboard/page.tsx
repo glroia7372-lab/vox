@@ -25,16 +25,21 @@ import Image from 'next/image';
 
 export default function DashboardPage() {
     const router = useRouter();
+    const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+    const [isEditBoardOpen, setIsEditBoardOpen] = useState(false);
+    const [editingBoard, setEditingBoard] = useState<{ id: string, name: string } | null>(null);
+
     const {
         isSubscriber,
         userProfile,
         showDarkMode,
         bookmarks,
         boards,
-        updateUserProfile
+        updateUserProfile,
+        updateBoard,
+        deleteBoard
     } = useApp();
 
-    const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
     const [editFormData, setEditFormData] = useState({
         name: userProfile?.name || '',
         email: userProfile?.email || '',
@@ -44,6 +49,15 @@ export default function DashboardPage() {
         priority: userProfile?.priority || '',
         budget: userProfile?.budget || '',
     });
+
+    const handleUpdateBoard = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (editingBoard) {
+            updateBoard(editingBoard.id, { name: editingBoard.name });
+            setIsEditBoardOpen(false);
+            setEditingBoard(null);
+        }
+    };
 
     // 이펙트로 데이터 동기화
     useEffect(() => {
@@ -233,29 +247,42 @@ export default function DashboardPage() {
                                 </Link>
 
                                 {boards.slice(0, 2).map(board => (
-                                    <Link href={`/archive?tab=moodboard&board=${board.id}`} key={board.id} className="block group">
-                                        <div className="aspect-[4/3] rounded-3xl bg-gray-100 dark:bg-gray-800 overflow-hidden relative mb-3">
-                                            {board.itemIds.length > 0 ? (
-                                                <div className="grid grid-cols-2 grid-rows-2 h-full gap-0.5 opacity-80 group-hover:opacity-100 transition-opacity">
-                                                    {[0, 1, 2, 3].map(i => {
-                                                        const item = bookmarks.find(b => b.id === board.itemIds[i % board.itemIds.length]);
-                                                        return <div key={i} className="bg-gray-200 dark:bg-gray-700">{item && <img src={item.imageUrl} className="w-full h-full object-cover" />}</div>
-                                                    })}
-                                                </div>
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center">
-                                                    <Layout className="w-8 h-8 text-gray-300" />
-                                                </div>
-                                            )}
-                                        </div>
-                                        <h4 className="font-bold text-sm truncate">{board.name}</h4>
-                                        <p className="text-xs text-gray-500">{board.itemIds.length} items</p>
-                                    </Link>
+                                    <div key={board.id} className="block group relative">
+                                        <Link href={`/archive?tab=moodboard&board=${board.id}`} className="block">
+                                            <div className="aspect-[4/3] rounded-3xl bg-gray-100 dark:bg-gray-800 overflow-hidden relative mb-3">
+                                                {board.itemIds.length > 0 ? (
+                                                    <div className="grid grid-cols-2 grid-rows-2 h-full gap-0.5 opacity-80 group-hover:opacity-100 transition-opacity">
+                                                        {[0, 1, 2, 3].map(i => {
+                                                            const item = bookmarks.find(b => b.id === board.itemIds[i % board.itemIds.length]);
+                                                            return <div key={i} className="bg-gray-200 dark:bg-gray-700">{item && <img src={item.imageUrl} className="w-full h-full object-cover" alt="" />}</div>
+                                                        })}
+                                                    </div>
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center">
+                                                        <Layout className="w-8 h-8 text-gray-300" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <h4 className="font-bold text-sm truncate">{board.name}</h4>
+                                            <p className="text-xs text-gray-500">{board.itemIds.length} items</p>
+                                        </Link>
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                setEditingBoard({ id: board.id, name: board.name });
+                                                setIsEditBoardOpen(true);
+                                            }}
+                                            className="absolute top-4 right-4 p-2 bg-white/90 dark:bg-black/90 backdrop-blur rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all hover:scale-110"
+                                        >
+                                            <Edit3 className="w-4 h-4 text-vox-red" />
+                                        </button>
+                                    </div>
                                 ))}
 
                                 {boards.length < 2 && (
                                     <Link href="/archive?tab=moodboard" className="block group border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-3xl aspect-[4/3] flex flex-col items-center justify-center gap-2 hover:border-vox-red hover:bg-vox-red/5 transition-colors">
-                                        <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 group-hover:text-vox-red"><TrendingUp className="w-5 h-5" /></div>
+                                        <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 group-hover:text-vox-red"><Plus className="w-5 h-5" /></div>
                                         <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Create New</span>
                                     </Link>
                                 )}
@@ -272,7 +299,7 @@ export default function DashboardPage() {
                                     {recentPins.map(pin => (
                                         <a href={pin.url} key={pin.id} className="group cursor-pointer block">
                                             <div className="aspect-square rounded-2xl bg-gray-100 dark:bg-gray-800 overflow-hidden mb-2 relative">
-                                                <img src={pin.imageUrl} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                                <img src={pin.imageUrl} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="" />
                                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
                                                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <div className="bg-white/90 backdrop-blur rounded-full p-1.5 shadow-sm">
@@ -327,6 +354,45 @@ export default function DashboardPage() {
                             </div>
 
                             <button type="submit" className="w-full bg-vox-red text-white py-4 rounded-xl font-bold uppercase mt-4">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Moodboard Modal */}
+            {isEditBoardOpen && editingBoard && (
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
+                    <div className={`${showDarkMode ? 'bg-gray-900 border-gray-800' : 'bg-white'} relative w-full max-w-sm p-8 rounded-[2rem] shadow-2xl animate-scaleIn`}>
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-xl font-serif font-bold">Edit Moodboard</h2>
+                            <button onClick={() => setIsEditBoardOpen(false)}><X className="w-5 h-5 text-gray-400" /></button>
+                        </div>
+                        <form onSubmit={handleUpdateBoard} className="space-y-6">
+                            <div>
+                                <label className="block text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2">Board Name</label>
+                                <input
+                                    type="text"
+                                    value={editingBoard.name}
+                                    onChange={e => setEditingBoard({ ...editingBoard, name: e.target.value })}
+                                    className="w-full bg-transparent border-b-2 border-gray-100 dark:border-gray-800 py-3 focus:border-vox-red outline-none font-bold text-lg"
+                                    autoFocus
+                                />
+                            </div>
+                            <div className="flex flex-col gap-3">
+                                <button type="submit" className="w-full bg-vox-red text-white py-4 rounded-xl font-bold uppercase tracking-widest text-xs hover:opacity-90 transition-opacity">Save Name</button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        if (confirm('Are you sure you want to delete this board? items will remain saved.')) {
+                                            deleteBoard(editingBoard.id);
+                                            setIsEditBoardOpen(false);
+                                        }
+                                    }}
+                                    className="w-full py-4 text-gray-400 hover:text-red-500 font-bold uppercase tracking-widest text-[10px] transition-colors"
+                                >
+                                    Delete Board
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>

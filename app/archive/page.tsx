@@ -93,6 +93,13 @@ export default function ArchivePage() {
     };
 
     useEffect(() => {
+        const tab = searchParams.get('tab');
+        if (tab === 'moodboard') {
+            setActiveTab('moodboard');
+        } else if (tab === 'alerts') {
+            setActiveTab('alerts');
+        }
+
         const status = searchParams.get('status');
         if (status === 'subscribed') {
             setIsSubscriber(true);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Calendar, ExternalLink, Bookmark, Share2, TrendingUp } from 'lucide-react';
+import { Calendar, ExternalLink, Bookmark, Share2, TrendingUp, Grid, List } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useApp } from '@/context/AppContext';
 import { fetchCultureContent, CultureArticle, cultureCategories } from '@/lib/cultureApi';
@@ -126,21 +126,17 @@ export default function CultureClient({ initialArticles, initialCategory }: Cult
                     <div className="flex gap-2">
                         <button
                             onClick={() => setViewMode('featured')}
-                            className={`px-4 py-2 rounded-lg text-sm transition-colors ${viewMode === 'featured'
-                                ? 'bg-vox-red text-white'
-                                : 'bg-gray-200 text-gray-700'
-                                }`}
+                            className={`p-2 rounded ${viewMode === 'featured' ? 'bg-vox-red text-white' : 'bg-gray-200'}`}
+                            aria-label="Grid View"
                         >
-                            Featured
+                            <Grid className="w-5 h-5" />
                         </button>
                         <button
                             onClick={() => setViewMode('list')}
-                            className={`px-4 py-2 rounded-lg text-sm transition-colors ${viewMode === 'list'
-                                ? 'bg-vox-red text-white'
-                                : 'bg-gray-200 text-gray-700'
-                                }`}
+                            className={`p-2 rounded ${viewMode === 'list' ? 'bg-vox-red text-white' : 'bg-gray-200'}`}
+                            aria-label="List View"
                         >
-                            List
+                            <List className="w-5 h-5" />
                         </button>
                     </div>
                 </div>
